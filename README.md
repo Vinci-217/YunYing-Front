@@ -12,4 +12,13 @@
   ```
 
 - 先拉取 dev，然后根据 dev 自己建立自己的分支，修改以后提交 PR 到 dev 分支上面
-- 测试1
+- 测试 1
+
+## 技术栈
+
+![](https://img.shields.io/badge/HTML5-%23E34F26?style=flat-square&logo=html5&logoColor=%23fff)
+![](https://img.shields.io/badge/CSS3-%231572B6?style=flat-square&logo=css3&logoColor=%23fff)
+![](https://img.shields.io/badge/JavaScript-%23F7DF1E?style=flat-square&logo=javascript&logoColor=%23fff)
+![](https://img.shields.io/badge/React-%2361DAFB?style=flat-square&logo=react&logoColor=%23fff)
+![](https://img.shields.io/badge/Webpack-%238DD6F9?style=flat-square&logo=webpack&logoColor=%23fff)
+![](https://img.shields.io/badge/Ant%20Design-%230170FE?style=flat-square&logo=antdesign&logoColor=%23fff)
