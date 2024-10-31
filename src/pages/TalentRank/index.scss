@@ -1,0 +1,185 @@
+.header{
+  display: flex;
+  justify-content: space-between;
+  .left{
+    width: 100px;
+    height: 50px;
+    // background-color: #fff;
+  }
+  .center{
+    width: 100px;
+    height: 50px;
+    // background-color: blue;
+  }
+  .right{
+    width: 100px;
+    height: 50px;
+    // background-color: red;
+  }
+}
+.outer{
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    height: 0px;               /* 控制横向滚动条的高度 */
+    width: 0px;
+  }
+  .top{
+    // background-color: red;
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: space-evenly;
+    .rank{
+      position: relative;
+      display: grid;
+      justify-items: center;
+      width: 25%;
+      min-width: 200px;
+      height: 100%;
+      // background-color: pink;
+    }
+    .rank2{
+      .silver-coin{
+        position: absolute;
+        top: -20px;
+      }
+      .avatar{
+        position: absolute;
+        width: 150px;
+        min-width: 100px;
+        height: 150px;
+        border-radius: 50%;
+        top: 130px;
+        background-color: blue;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        cursor: pointer;
+        img {
+          width: 100%;
+          height: 100%;
+          transition: transform 0.3s ease; /* 放大效果过渡 */
+        }
+      
+        &:hover img {
+          transform: scale(1.2);           /* 悬停时放大图片 */
+        }
+      }
+      .name{
+        position: absolute;
+        font-weight: bold;
+        font-size: 16px;
+        top: 290px;
+      }
+      .silver-medal{
+        position: absolute;
+        transform: rotate(-20deg) translateX(40px);
+        top: 240px;
+      }
+    }
+    .rank1{
+      .crown{
+        position: absolute;
+        top: -30px;
+      }
+      .avatar{
+        position: absolute;
+        width: 170px;
+        min-width: 100px;
+        height: 170px;    /* 宽高比为 1:1 */
+        border-radius: 50%;
+        top: 120px;
+        background-color: blue;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        cursor: pointer;
+        img {
+          width: 100%;
+          height: 100%;
+          transition: transform 0.3s ease; /* 放大效果过渡 */
+        }
+      
+        &:hover img {
+          transform: scale(1.2);           /* 悬停时放大图片 */
+        }
+      }
+      .name{
+        position: absolute;
+        font-weight: bold;
+        font-size: 18px;
+        top: 300px;
+      }
+      .gold-medal{
+        position: absolute;
+        transform: rotate(-20deg) translateX(50px);
+        top: 240px;
+      }
+      .congratulation {
+        pointer-events: none; /* 禁用鼠标事件 */
+    }
+    }
+    .rank3{
+      .bronze-coin{
+        position: absolute;
+        top: -20px;
+      }
+      .avatar{
+        position: absolute;
+        width: 150px;
+        min-width: 100px;
+        height: 150px;    /* 宽高比为 1:1 */
+        border-radius: 50%;
+        top: 130px;
+        background-color: blue;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        cursor: pointer;
+        img {
+          width: 100%;
+          height: 100%;
+          transition: transform 0.3s ease; /* 放大效果过渡 */
+        }
+      
+        &:hover img {
+          transform: scale(1.2);           /* 悬停时放大图片 */
+        }
+      }
+      .name{
+        position: absolute;
+        font-weight: bold;
+        font-size: 16px;
+        top: 290px;
+      }
+      .bronze-medal{
+        position: absolute;
+        transform: rotate(-20deg) translateX(40px);
+        top: 240px;
+      }
+    }
+  }
+  .bottom{
+    // background-color: blue;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-left: 10px;
+    > *{
+      flex-shrink: 0;
+    }
+    // 控制横向滚动条样式（针对 Webkit 浏览器）
+    &::-webkit-scrollbar {
+      height: 10px;               // 滚动条的高度
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3); // 滚动条的颜色
+        border-radius: 4px;
+    }
+    .developer{
+      margin-right: 20px;
+      margin-top: 20px;
+    }
+  }
+}

@@ -1,0 +1,129 @@
+.developer-card{
+  width: 200px;
+  height: 300px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #71b3fa 0%, #9ac9f5 100%);
+  position: relative;
+  padding-top: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 默认阴影 */
+  transition: box-shadow 0.3s ease; /* 阴影过渡效果 */
+  cursor: pointer; /* 鼠标悬停时变成手形 */
+  &:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* 悬停时扩大阴影 */
+  }
+  .rank{
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: -15px;
+    left: 150px;
+    img{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .text{
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      text-align: center;
+      line-height: 20px;
+      left: 15px;
+      top: 9px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+      font-size: 12px;
+    }
+  }
+  .nation{
+    width: 50px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    left: 5px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .avatar{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-left: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    img{
+      width: 100%;
+      height: 100%;
+      transition: transform 0.3s ease; /* 放大效果过渡 */
+    }
+    &:hover img {
+      transform: scale(1.1);           /* 悬停时放大图片 */
+    }
+  }
+  .name{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 10px;
+  }
+  .followers{
+    display: flex;
+    padding: 0 8px;
+    .left-divider,
+    .right-divider{
+      flex-grow: 1;
+      height: 1px;
+      background-color: #ccc;
+      margin-top: 8px;
+    }
+    .count{
+      color: #ccc;
+      font-size: 12px;
+      padding: 0 5px;
+    }
+  }
+  .rate{
+    display: grid;
+    justify-items: center;
+  }
+  .repo{
+    font-size: 16px;
+    text-align: center;
+    span{
+      font-weight: bold;
+      font-size: 18px;
+    }
+  }
+}
+
+.grade{
+  width: 160px;
+  height: 35px;
+  margin-left: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  line-height: 35px;
+  border-radius: 30px;
+  background-color: #91caff;
+  transition: background-color 0.3s ease; /* 背景颜色过渡 */;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  &:hover{
+    background-color: #69b1ff; /* 悬停时改变背景颜色 */
+  }
+  .icon{
+    width: 45px;
+    height: 45px;
+    margin-top: -15px;
+    img{
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .text{
+    font-weight: bold;
+  }
+}
