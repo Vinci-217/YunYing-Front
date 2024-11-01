@@ -1,0 +1,32 @@
+.repository-card {
+    width: 50%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  
+    &__name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  
+    &__description {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 10px;
+    }
+  
+    &__stats {
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      color: #999;
+    }
+  
+    &:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+  }
+  

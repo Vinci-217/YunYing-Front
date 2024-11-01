@@ -1,0 +1,41 @@
+.developer-layout {
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .developer-sider {
+    background: #fff;
+  }
+  
+  .developer-info {
+    padding: 20px;
+    text-align: center;
+  
+    h2 {
+      margin-bottom: 10px;
+    }
+  
+    p {
+      margin: 5px 0;
+    }
+  
+    a {
+      color: #1890ff;
+      text-decoration: none;
+  
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  
+  .developer-content {
+    padding: 20px;
+  }
+  
+  .developer-footer {
+    text-align: center;
+  
+  }
