@@ -3,7 +3,8 @@ import { Layout, Avatar, Card, Col, Row, Carousel } from 'antd';
 import ReactECharts from 'echarts-for-react';
 import './index.scss';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
-const { Sider, Content} = Layout;
+
+const { Sider, Content } = Layout;
 
 const Developer: React.FC = () => {
   const developerInfo = {
@@ -24,20 +25,33 @@ const Developer: React.FC = () => {
       yAxis: { type: 'value' },
       series: [{ data: [10, 22, 28, 43, 49], type: 'bar' }],
     },
+    communityParticipation: {
+      xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
+      yAxis: { type: 'value' },
+      series: [{ data: [5, 15, 10, 20, 25], type: 'bar' }], // 示例数据
+    },
     followerTrend: {
       xAxis: { type: 'category', data: ['Jan', 'Feb', 'Mar', 'Apr', 'May'] },
       yAxis: { type: 'value' },
       series: [{ data: [50, 80, 100, 130, 150], type: 'line' }],
     },
     projectParticipation: {
+      radar: {
+        indicator: [
+          { name: 'Project A', max: 100 },
+          { name: 'Project B', max: 100 },
+          { name: 'Project C', max: 100 },
+        ],
+      },
       series: [
         {
-          type: 'pie',
-          radius: '50%',
+          name: '贡献比例',
+          type: 'radar',
           data: [
-            { value: 30, name: 'Project A' },
-            { value: 20, name: 'Project B' },
-            { value: 50, name: 'Project C' },
+            {
+              value: [30, 20, 50],
+              name: '开发者贡献',
+            },
           ],
         },
       ],
@@ -46,7 +60,6 @@ const Developer: React.FC = () => {
 
   return (
     <Layout className="developer-layout">
-      
       <Sider width="25%" className="developer-sider">
         <div className="developer-info">
           <Avatar size={100} src={developerInfo.avatarUrl} />
@@ -62,9 +75,7 @@ const Developer: React.FC = () => {
       </Sider>
      
       <Layout>
-
         <Content style={{ padding: '20px' }}>
-
           <Row gutter={16}>
             <Col span={12}>
               <Card title="AI 报告">
@@ -78,7 +89,7 @@ const Developer: React.FC = () => {
             </Col>
             <Col span={12}>
               <Card title="置信度展示">
-              <h3>技术擅长</h3>
+                <h3>技术擅长</h3>
                 <p>内容...</p>
                 <h3>项目经验</h3>
                 <p>内容...</p>
@@ -87,10 +98,14 @@ const Developer: React.FC = () => {
               </Card>
             </Col>
           </Row>
+          
           <Card title="Echarts 数据可视化" style={{ marginTop: '20px' }}>
             <Carousel autoplay>
               <div>
                 <ReactECharts option={chartOptions.codeContribution} />
+              </div>
+              <div>
+                <ReactECharts option={chartOptions.communityParticipation} />
               </div>
               <div>
                 <ReactECharts option={chartOptions.followerTrend} />
@@ -102,17 +117,12 @@ const Developer: React.FC = () => {
           </Card>
         
           <Card title="项目展示" style={{ marginTop: '20px' }}>
-          <RepositoryCard name="项目1" description="描述信息" stars={150} forks={30} onClick={() => window.open('https://github.com/project1')} />
-          {/* 更多项目卡片 */}
-          <RepositoryCard name="项目2" description="描述信息" stars={200} forks={40} onClick={() => window.open('https://github.com/project2')} />
+            <RepositoryCard name="项目1" description="描述信息" stars={150} forks={30} onClick={() => window.open('https://github.com/project1')} />
+            <RepositoryCard name="项目2" description="描述信息" stars={200} forks={40} onClick={() => window.open('https://github.com/project2')} />
           </Card>
-          
         </Content>
-
       </Layout>
-
     </Layout>
-
   );
 };
 
