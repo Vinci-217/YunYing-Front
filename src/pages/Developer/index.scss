@@ -1,41 +1,48 @@
-.developer-layout {
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    flex-direction: row;
+.layout {
+  min-height: 10vh;
+}
+
+.sider {
+  background: #f0f2f5;
+  padding: 20px;
+}
+
+.content {
+  padding: 20px;
+}
+
+.footer {
+  text-align: center;
+  // padding: 5px;
+  background: transparent;
+  .ant-card {
+    background-color: transparent; /* 设置卡片背景为透明 */
+    width: 100%; /* 卡片宽度为100% */
+    height: 100%; /* 卡片高度为100% */
+    border-radius: 10px 10px 0 0; /*如果需要卡片也有圆角 */
+    display: flex; /* 使用 Flexbox */
+    flex-direction: column; /* 纵向排列 */
+    align-items: center; /* 水平居中对齐 */
+    justify-content: center; /* 垂直居中对齐 */
+
+  }
+}
+.ant-layout-sider {
+  background-color: transparent; /* 设置背景为透明 */
+  border-radius: 10px 10px 0 0; /* 设置圆角 */
+  .ant-card {
+    background-color: white; /* 设置卡片背景为白色 */
+    width: 100%; /* 卡片宽度为100% */
+    height: 100%; /* 卡片高度为100% */
+    border-radius: 10px 10px 0 0; /* 可选：如果需要卡片也有圆角 */
   }
   
-  .developer-sider {
-    background: #fff;
-  }
-  
-  .developer-info {
-    padding: 20px;
-    text-align: center;
-  
-    h2 {
-      margin-bottom: 10px;
-    }
-  
-    p {
-      margin: 5px 0;
-    }
-  
-    a {
-      color: #1890ff;
-      text-decoration: none;
-  
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
-  
-  .developer-content {
-    padding: 20px;
-  }
-  
-  .developer-footer {
-    text-align: center;
-  
-  }
+}
+
+
+
+
+.ant-card-head {
+  background-color: white; /* 设置卡片头部背景为白色 */
+}
+
