@@ -5,6 +5,8 @@ import { Layout, Menu, theme } from 'antd';
 import type { MenuProps } from 'antd';
 import './index.scss'
 
+import { getFieldList, getNationList, getDeveloperList } from '@/api/path/talentrank';
+
 // 导入icon
 import icons from '@/assets/icons/index';
 
@@ -40,6 +42,7 @@ interface Developer {
 }
 
 const TalentRank: React.FC = () => {
+
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   // 模拟获取数据的函数
@@ -58,6 +61,17 @@ const TalentRank: React.FC = () => {
 
   useEffect(() => {
     fetchMoreDevelopers(); // 初始加载数据
+
+    const fetchFieldList = async () => {
+      try {
+        const result = await getFieldList();
+        console.log(result);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchFieldList();
   }, []);
 
   const {
@@ -255,10 +269,13 @@ const TalentRank: React.FC = () => {
         </Sider>
 
         <Content style={{ padding: '10px', background: '#fff'}}>
-          <div className='outer' style={{
-            background: colorPrimaryBg,
-            borderRadius: borderRadiusLG,
-          }}>
+          <div className='outer' 
+            style={{
+              background: colorPrimaryBg,
+              borderRadius: borderRadiusLG,
+            }}
+            ref={containerRef}
+            onScroll={handleScroll}>
             {/* top3开发者 */}
             <div className='top'>
               <div className='rank2 rank'>
@@ -276,7 +293,7 @@ const TalentRank: React.FC = () => {
                 </div>
                 <div className='name'>{developers[0].name}</div>
                 <LottieAnimation className='gold-medal' animationData={AnimationGoldMedal} width='140px'></LottieAnimation>
-                <LottieAnimation className='congratulation' animationData={AnimationCongratulation} width='100%'></LottieAnimation>
+                <LottieAnimation className='congratulation' animationData={AnimationCongratulation} width='250px' height='350px'></LottieAnimation>
               </div>
               <div className='rank3 rank'>
                 <LottieAnimation className='bronze-coin' animationData={AnimationBronzeCoin} width='200px'></LottieAnimation>
@@ -289,9 +306,7 @@ const TalentRank: React.FC = () => {
               {/* <LottieAnimation animationData={AnimationCrown} width='20%'/> */}
             </div>
             {/* 开发者rank */}
-            <div className='bottom'
-              ref={containerRef}
-              onScroll={handleScroll}>
+            <div className='bottom'>
               {developers.map((dev, index) => (
                 <DeveloperCard key={index} className='developer' {...dev} />
               ))}
