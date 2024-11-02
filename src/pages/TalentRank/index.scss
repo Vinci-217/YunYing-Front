@@ -1,3 +1,21 @@
+$base-font-size: 10px;
+
+html {
+    font-size: $base-font-size;
+
+    // @media (max-width: 1200px) {
+    //     font-size: $base-font-size * 0.9375; // 中等屏幕
+    // }
+
+    // @media (max-width: 992px) {
+    //     font-size: $base-font-size * 0.875; // 小屏幕
+    // }
+
+    // @media (max-width: 768px) {
+    //     font-size: $base-font-size * 0.8125; // 移动端
+    // }
+}
+
 .header{
   display: flex;
   justify-content: space-between;
@@ -28,7 +46,7 @@
   .top{
     // background-color: red;
     width: 100%;
-    height: 50vh;
+    height: 350px;
     display: flex;
     justify-content: space-evenly;
     .rank{
@@ -117,7 +135,7 @@
       }
       .congratulation {
         pointer-events: none; /* 禁用鼠标事件 */
-    }
+      }
     }
     .rank3{
       .bronze-coin{
@@ -160,26 +178,13 @@
   }
   .bottom{
     // background-color: blue;
+    padding: 0 10px;
     width: 100%;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-left: 10px;
-    > *{
-      flex-shrink: 0;
-    }
-    // 控制横向滚动条样式（针对 Webkit 浏览器）
-    &::-webkit-scrollbar {
-      height: 10px;               // 滚动条的高度
-    }
-
-    &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.3); // 滚动条的颜色
-        border-radius: 4px;
-    }
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 每个卡片最小200px，最大自动填充 */
+    gap: 18px;
     .developer{
-      margin-right: 20px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
   }
 }
