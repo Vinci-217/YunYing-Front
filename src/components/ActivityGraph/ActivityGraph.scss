@@ -1,0 +1,6 @@
+.img {
+    width: 100px; /* 图片宽度为100% */
+    height: auto; /* 高度自动，保持比例 */
+    border-radius: 10px 10px 0 0; 
+    object-fit: cover; 
+  }
