@@ -59,7 +59,7 @@ const DeveloperCard: React.FC<DeveloperCardProps> = ({
             <Rate disabled allowHalf defaultValue={rate} />
           </div>
           <div className='repo'>
-            拥有<span>{repo}</span>个仓库
+            拥有 <span>{repo}</span> 个仓库
           </div>
         </div>
 
