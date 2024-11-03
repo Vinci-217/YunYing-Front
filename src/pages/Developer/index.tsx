@@ -1,6 +1,6 @@
 import React from 'react';
-import { Layout, Card, Typography, Space, Row, Col } from 'antd';
-import { GithubOutlined, UserOutlined, MailOutlined, CodeOutlined } from '@ant-design/icons';
+import { Layout, Card, Typography, Space, Row, Col, Avatar } from 'antd';
+import { GithubOutlined, UserOutlined,GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
@@ -16,16 +16,30 @@ interface PersonalInfo {
   bio: string;
   email: string;
   github: string;
+  nation: string;
+  followers: number;
+  following: number;
+  talentRank: number;
+  confidence: number;
   skills: string[];
+  avatarUrl: string;
 }
 
 const personalInfo: PersonalInfo = {
-  name: 'Zero',
+  name: 'Vinci',
   bio: '个人简介：热爱编程，喜欢开源。',
   email: 'user@example.com',
   github: 'https://github.com/Vinci-217',
-  skills: ['Java', 'React', 'Node.js', 'TypeScript', 'Ant Design'],
+  nation: '美国',
+  followers: 150,
+  following: 100,
+  talentRank: 85,
+  confidence: 90,
+  skills: ['前端开发', '后端开发', '全栈开发'],
+  avatarUrl: "https://avatars.githubusercontent.com/u/115935217?v=4",
 };
+
+const ChinaFlag = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg";
 
 const Developer: React.FC = () => {
   return (
@@ -33,12 +47,44 @@ const Developer: React.FC = () => {
       <Row gutter={[16, 16]}>
         <Col xs={24} md={6}>
           <Card bordered={false} style={{ height: '100%' }}>
-            <Space direction="vertical" size="middle">
-              <Text strong style={{ fontSize: '18px' }}><UserOutlined /> {personalInfo.name}</Text>
-              <Text type="secondary">{personalInfo.bio}</Text>
-              <Text><MailOutlined /> {personalInfo.email}</Text>
-              <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
-              <Text>技能：{personalInfo.skills.join(', ')}</Text>
+            <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
+              <Avatar size={64} src={personalInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
+              <Text strong style={{ fontSize: '18px', textAlign: 'center' }}><UserOutlined /> {personalInfo.name}</Text>
+              <Text type="secondary" style={{ textAlign: 'center' }}>{personalInfo.bio}</Text>
+              <Row justify="center" style={{ width: '100%' }}>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text><MailOutlined /> {personalInfo.email}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                <Text className="flex items-center">
+                    <GlobalOutlined className="mr-1" />
+                    国籍：
+                    <span className="flex items-center">
+                      <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{ 
+                          width: '20px', 
+                          height: '15px', 
+                          marginRight: '5px', 
+                          position: 'relative', 
+                          top: '3px' 
+                        }}  />
+                      {personalInfo.nation}
+                    </span>
+                    | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
+                  </Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
+                </Col>
+              </Row>
             </Space>
           </Card>
         </Col>
@@ -57,25 +103,25 @@ const Developer: React.FC = () => {
       <Card bordered={false} style={{ marginTop: '20px' }}>
         <Title level={3}><GithubOutlined /> 可视化分析</Title>
         <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubStats username="Vinci-217" />
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubProductiveTime username="Vinci-217" />
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubTopLangs username="Vinci-217" />
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubStreak username="Vinci-217" />
-            </Col>
-            <Col span={24}>
-              <GitHubActivityGraph username="Vinci-217" />
-            </Col>
-            <Col span={24}>
-              <ActivityGraph username='Vinci-217'/>
-            </Col>
-          </Row>
+          <Col xs={24} sm={12} md={12} lg={6}>
+            <GitHubStats username="Vinci-217" />
+          </Col>
+          <Col xs={24} sm={12} md={12} lg={6}>
+            <GitHubProductiveTime username="Vinci-217" />
+          </Col>
+          <Col xs={24} sm={12} md={12} lg={6}>
+            <GitHubTopLangs username="Vinci-217" />
+          </Col>
+          <Col xs={24} sm={12} md={12} lg={6}>
+            <GitHubStreak username="Vinci-217" />
+          </Col>
+          <Col span={24}>
+            <GitHubActivityGraph username="Vinci-217" />
+          </Col>
+          <Col span={24}>
+            <ActivityGraph username='Vinci-217' />
+          </Col>
+        </Row>
       </Card>
     </Layout>
   );
