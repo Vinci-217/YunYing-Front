@@ -11,7 +11,9 @@ const ActivityGraph: React.FC<ActivityGraphProps> = ({ username, theme = 'minima
 
   return (
     <a href={repoLink} target="_blank" rel="noopener noreferrer">
-      <img src={imageUrl} alt={`${username}'s GitHub activity graph`} />
+      <img src={imageUrl} alt={`${username}'s GitHub activity graph`} 
+      style={{ width: '100%', borderRadius: '8px' }}
+      />
     </a>
   );
 };

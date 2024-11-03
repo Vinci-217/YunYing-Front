@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 interface GitHubStatsProps {
   username: string;
 }
@@ -12,7 +13,7 @@ const GitHubStats: React.FC<GitHubStatsProps> = ({ username }) => {
       <img
         src={imageUrl}
         alt={`${username}'s GitHub stats`}
-        style={{ maxWidth: '100%', borderRadius: '8px' }}
+        style={{ width: '100%', borderRadius: '8px' }}
       />
     </div>
   );

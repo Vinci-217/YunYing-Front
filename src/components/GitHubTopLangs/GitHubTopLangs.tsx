@@ -9,7 +9,9 @@ const GitHubTopLangs: React.FC<GitHubTopLangsProps> = ({ username }) => {
 
   return (
     <a href={`https://github.com/${username}`}>
-      <img src={url} alt={`${username}'s Top Languages`} />
+      <img src={url} alt={`${username}'s Top Languages`} 
+      style={{ width: '100%', borderRadius: '8px' }}
+      />
     </a>
   );
 };
