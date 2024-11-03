@@ -25,6 +25,13 @@ interface PersonalInfo {
   skills: string[];
   avatarUrl: string;
 }
+interface Project {
+  name: string;
+  description: string;
+  stars: number;
+  forks: number;
+  url: string;
+}
 
 const personalInfo: PersonalInfo = {
   name: 'Vinci',
@@ -40,7 +47,7 @@ const personalInfo: PersonalInfo = {
   avatarUrl: "https://avatars.githubusercontent.com/u/115935217?v=4",
 };
 
-const projects = [
+const projects: Project[] = [
   { name: '项目1', description: '描述信息1', stars: 150, forks: 30, url: 'https://github.com/project1' },
   { name: '项目2', description: '描述信息2', stars: 200, forks: 40, url: 'https://github.com/project2' },
   { name: '项目3', description: '描述信息3', stars: 100, forks: 20, url: 'https://github.com/project3' },
