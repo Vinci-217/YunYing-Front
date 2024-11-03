@@ -1,6 +1,6 @@
-import React from 'react';
-import { Layout, Card, Typography, Space, Row, Col, Avatar } from 'antd';
-import { GithubOutlined,BarChartOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
+import React, { useState, useEffect } from 'react';
+import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer } from 'antd';
+import { GithubOutlined, BarChartOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
@@ -11,6 +11,7 @@ import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 
 const { Text, Title } = Typography;
+const { Header } = Layout;
 
 interface PersonalInfo {
   name: string;
@@ -25,6 +26,7 @@ interface PersonalInfo {
   skills: string[];
   avatarUrl: string;
 }
+
 interface Project {
   name: string;
   description: string;
@@ -56,8 +58,46 @@ const projects: Project[] = [
 ];
 
 const Developer: React.FC = () => {
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [displayedText, setDisplayedText] = useState('');
+  const fullText = "这里是抽屉的内容，具有打字机特效。";
+
+  const showDrawer = () => {
+    setDrawerVisible(true);
+    setDisplayedText(''); // 重置显示文本
+  };
+
+  const onClose = () => {
+    setDrawerVisible(false);
+  };
+
+  useEffect(() => {
+    if (drawerVisible) {
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < fullText.length) {
+          setDisplayedText(prev => prev + fullText[index]);
+          index++;
+        } else {
+          clearInterval(interval);
+        }
+      }, 100); // 每100毫秒打一个字符
+
+      return () => clearInterval(interval); // 清理定时器
+    }
+  }, [drawerVisible]);
+
   return (
     <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+      <Header>
+        <OpenAIOutlined 
+          style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
+          onClick={showDrawer} 
+        />
+        <Button type="primary" icon={<DoubleRightOutlined style={{ color: 'white' }} />} ghost>
+          排行
+        </Button>
+      </Header>
       <Row gutter={[16, 16]}>
         <Col xs={24} md={6}>
           <Card bordered={false} style={{ height: '100%' }}>
@@ -129,46 +169,58 @@ const Developer: React.FC = () => {
       </Row>
 
       <Card bordered={false} style={{ marginTop: '20px' }}>
-          <Title className="text-2xl font-semibold mb-4 flex items-center">
-            <BarChartOutlined className="mr-2" />
-            可视化分析
-          </Title>
-          <div className="space-y-4">
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <GitHubActivityGraph username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={12}>
-                <GitHubStats username="Vinci-217" />
-              </Col>
-              <Col xs={24} md={12}>
-                <GitHubProductiveTime username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={12}>
-                <GitHubStreak username="Vinci-217" />
-              </Col>
-              <Col xs={24} md={12}>
-                <GitHubTopLangs username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <ActivityGraph username='Vinci-217' />
-              </Col>
-            </Row>
-          </div>
-        </Card>
+        <Title className="text-2xl font-semibold mb-4 flex items-center">
+          <BarChartOutlined className="mr-2" />
+          可视化分析
+        </Title>
+        <div className="space-y-4">
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <GitHubActivityGraph username="Vinci-217" />
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <GitHubStats username="Vinci-217" />
+            </Col>
+            <Col xs={24} md={12}>
+              <GitHubProductiveTime username="Vinci-217" />
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={12}>
+              <GitHubStreak username="Vinci-217" />
+            </Col>
+            <Col xs={24} md={12}>
+              <GitHubTopLangs username="Vinci-217" />
+            </Col>
+          </Row>
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <ActivityGraph username='Vinci-217' />
+            </Col>
+          </Row>
+        </div>
+      </Card>
 
-
+      {/* 抽屉组件 */}
+      <Drawer
+        title="AI报告"
+        placement="left"
+        closable={true}
+        onClose={onClose}
+        visible={drawerVisible}
+      >
+        <p>{displayedText}</p>
+      </Drawer>
     </Layout>
   );
 };
 
 export default Developer;
+
+
+
 
 
 
