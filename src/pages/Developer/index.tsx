@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Card, Typography, Space, Row, Col, Avatar } from 'antd';
-import { GithubOutlined, UserOutlined,GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
+import { GithubOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
@@ -8,6 +8,7 @@ import GitHubStats from '@/components/GitHubStats/GitHubStats';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
 import GitHubTopLangs from '@/components/GitHubTopLangs/GitHubTopLangs';
 import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
+import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 
 const { Text, Title } = Typography;
 
@@ -39,6 +40,13 @@ const personalInfo: PersonalInfo = {
   avatarUrl: "https://avatars.githubusercontent.com/u/115935217?v=4",
 };
 
+const projects = [
+  { name: '项目1', description: '描述信息1', stars: 150, forks: 30, url: 'https://github.com/project1' },
+  { name: '项目2', description: '描述信息2', stars: 200, forks: 40, url: 'https://github.com/project2' },
+  { name: '项目3', description: '描述信息3', stars: 100, forks: 20, url: 'https://github.com/project3' },
+  { name: '项目4', description: '描述信息4', stars: 250, forks: 50, url: 'https://github.com/project4' },
+  { name: '项目5', description: '描述信息5', stars: 180, forks: 25, url: 'https://github.com/project5' },
+];
 
 const Developer: React.FC = () => {
   return (
@@ -58,9 +66,8 @@ const Developer: React.FC = () => {
                   <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                <Text className="flex items-center">
-                    <GlobalOutlined className="mr-1" />
-                    国籍：
+                  <Text className="flex items-center">
+                    <GlobalOutlined className="mr-1" /> 国籍：
                     <span className="flex items-center">
                       <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{ 
                           width: '20px', 
@@ -68,10 +75,9 @@ const Developer: React.FC = () => {
                           marginRight: '5px', 
                           position: 'relative', 
                           top: '3px' 
-                        }}  />
+                        }} />
                       {personalInfo.nation}
-                    </span>
-                    | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
+                    </span> | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
                   </Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
@@ -90,15 +96,26 @@ const Developer: React.FC = () => {
         <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
           <Row gutter={[16, 16]} style={{ flex: 1 }}>
             <Col span={24}>
-            <Card bordered={false} style={{ height: '100%' }}>
-            <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
-              <CodeOutlined /> 项目展示
-              
-            </Title>
-            <Text>项目描述内容：这里可以写关于项目的详细描述，技术栈，贡献情况等。</Text>
-          </Card>
-
-
+              <Card bordered={false} style={{ height: '100%' }}>
+                <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
+                  <CodeOutlined /> 项目展示
+                </Title>
+                <div style={{ maxHeight: '300px', overflowY: 'hidden', padding: '8px' }}>
+                  <Row gutter={[16, 16]}>
+                    {projects.slice(0, 4).map((project, index) => (
+                      <Col span={12} key={index}>
+                        <RepositoryCard 
+                          name={project.name} 
+                          description={project.description} 
+                          stars={project.stars} 
+                          forks={project.forks} 
+                          onClick={() => window.open(project.url)} 
+                        />
+                      </Col>
+                    ))}
+                  </Row>
+                </div>
+              </Card>
             </Col>
           </Row>
         </Col>
@@ -132,4 +149,12 @@ const Developer: React.FC = () => {
 };
 
 export default Developer;
+
+
+
+
+
+
+
+
 
