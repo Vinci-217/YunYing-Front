@@ -1,14 +1,18 @@
 // 开发者排名页面
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Layout, Menu, theme } from 'antd';
-import type { MenuProps } from 'antd';
+import { Select, theme } from 'antd';
 import './index.scss'
+import Logo from '@/components/Logo/Logo';
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
+import { Result } from '@/types/Result';
+import { Developer } from '@/types/TalentRank';
 
 import { getFieldList, getNationList, getDeveloperList } from '@/api/path/talentrank';
 
 // 导入icon
 import icons from '@/assets/icons/index';
+import logoIcons from '@/assets/logo';
 
 // 导入lottie动画
 import LottieAnimation from '@/components/LottieAnimation/LottieAnimation';
@@ -24,14 +28,9 @@ import AnimationBronzeMedal from '@/assets/lottie-animation/animation-bronze-med
 // 导入自定义组件
 import DeveloperCard from '@/components/DeveloperCard/DeveloperCard';
 
-const { Header, Sider, Content } = Layout;
+const { Option } = Select;
 
-interface SelectedItemsState {
-  field: string | null;
-  country: string | null;
-}
-
-interface Developer {
+interface Developer1 {
   rank?: number;
   avatar?: string;
   name?: string;
@@ -45,66 +44,8 @@ const TalentRank: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // 模拟获取数据的函数
-  const fetchMoreDevelopers = async () => {
-    console.log('获取数据');  
-  };
-
-  // 检测是否滚动到右边界
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
-    if (scrollWidth - scrollLeft <= clientWidth + 5) { // 接近右边界时加载
-        fetchMoreDevelopers();
-    }
-  };
-
-  useEffect(() => {
-    fetchMoreDevelopers(); // 初始加载数据
-
-    const fetchFieldList = async () => {
-      try {
-        const result = await getFieldList();
-        console.log(result);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchFieldList();
-  }, []);
-
-  const {
-    token: { colorPrimaryBg, borderRadiusLG, colorPrimaryHover },
-  } = theme.useToken();
-  
-
-  const [selectedItems, setSelectedItems] = useState<SelectedItemsState>({
-    field: null,
-    country: null,
-  });
-
-  const handleClick = (category: 'field' | 'country', key: string) => {    
-    setSelectedItems((prevState) => {
-      if (prevState[category] === key) {
-        return {
-         ...prevState,
-          [category]: null,
-        };
-      }
-      return{
-      ...prevState,
-      [category]: key,}
-    });
-  };
-
-  useEffect(() => {
-    console.log(selectedItems);
-  }, [selectedItems]);
-
-  const [collapsed, setCollapsed] = useState(false);
-
-  const [developers, setDevelopers] = useState<Developer[]>([
+  // 开发者列表
+  const [developers, setDevelopers] = useState<Developer1[]>([
     {
       rank: 1,
       avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
@@ -179,143 +120,190 @@ const TalentRank: React.FC = () => {
     },
   ]);
 
-  // 使用 items 定义菜单项
-  const items: MenuProps['items'] = [
-    {
-      key: 'field',
-      label: '按领域筛选',
-      icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-      children: [
-        {
-          key: 'frontend',
-          label: '前端开发',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('field', 'frontend'),
-        },
-        {
-          key: 'backend',
-          label: '后端开发',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('field', 'backend'),
-        },
-        {
-          key: 'blockchain',
-          label: '区块链',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('field', 'blockchain'),
-        },
-        {
-          key: 'ai',
-          label: '人工智能',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('field', 'ai'),
-        },
-      ],
-    },
-    {
-      key: 'country',
-      label: '按国家筛选',
-      icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-      children: [
-        {
-          key: 'china',
-          label: '中国',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('country', 'china'),
-        },
-        {
-          key: 'usa',
-          label: '美国',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('country', 'usa'),
-        },
-        {
-          key: 'japan',
-          label: '日本',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('country', 'japan'),
-        },
-        {
-          key: 'uk',
-          label: '英国',
-          icon: <img src={icons['lingyu']} alt="frontend" style={{ width: 16, height: 16 }} />,
-          onClick: () => handleClick('country', 'uk'),
-        },
-      ],
-    },
-  ];
+  // 分页参数（页码）
+  const page: number = 1;
+
+  // 分页参数（数量）
+  const pageSize: number = 20;
+
+  const [test, setTest] = useState<Developer[]>([])
+
+  // 获取开发者列表
+  const fetchMoreDevelopers = async () => {
+    console.log('获取数据');  
+    try {
+      const result: Result<Developer[]>  = await getDeveloperList(field, nation, page, pageSize);
+      console.log('开发者', result);
+      // setDevelopers(prevDevelopers => [...prevDevelopers,...result.data]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 检测是否滚动到右边界
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
+    if (scrollWidth - scrollLeft <= clientWidth + 5) { // 接近右边界时加载
+        fetchMoreDevelopers();
+    }
+  };
+
+  // 领域列表
+  const [fieldList, setFieldList] = useState<string[]>([]);
+
+  // 获取领域列表
+  const fetchFieldList = async () => {
+    try {
+      const result: Result<string[]>  = await getFieldList();
+      console.log('领域', result);
+      setFieldList(result.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 国家列表
+  const [nationList, setNationList] = useState<string[]>([]);
+
+  // 获取国家列表
+  const fetchNationList = async () => {
+    try {
+      const result: Result<string[]>  = await getNationList();
+      console.log('国家',result);
+      setNationList(result.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchMoreDevelopers(); // 初始加载数据
+
+    fetchFieldList();
+    fetchNationList();
+    console.log(1);
+  }, []);
+
+  const fields = ['Frontend', 'Backend', 'Blockchain'];
+  const countries = ['China', 'USA', 'UK', 'Germany'];
+
+  // 筛选条件（领域）
+  const [field, setField] = useState<string>('');
+
+  // 筛选条件（国家）
+  const [nation, setNation] = useState<string>('');
+
+  // 选择器的事件处理函数
+  const handleFieldChange = (value: string) => {
+    console.log('Selected field:', value);
+    // 处理筛选逻辑
+  };
+
+  const handleNationChange = (value: string) => {
+    console.log('Selected country:', value);
+    // 处理筛选逻辑
+  };
 
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Header className='header' style={{
-        background: colorPrimaryHover,
-      }}>
-          <div className='left'></div>
-          <div className='center'></div>
-          <div className='right'></div>
-      </Header>
-      <Layout>
-        <Sider width={200} 
-          theme='light'
-          collapsible
-          collapsed={collapsed}
-          onCollapse={setCollapsed}>
-          <Menu
-            mode="inline"
-            style={{ height: '100%', borderRight: 0 }}
-            selectedKeys={[selectedItems.field, selectedItems.country].filter((key): key is string => key !== null)}
-            items={items} // 使用 items 属性
-          />
-        </Sider>
-
-        <Content style={{ padding: '10px', background: '#fff'}}>
-          <div className='outer' 
-            style={{
-              background: colorPrimaryBg,
-              borderRadius: borderRadiusLG,
-            }}
-            ref={containerRef}
-            onScroll={handleScroll}>
-            {/* top3开发者 */}
-            <div className='top'>
-              <div className='rank2 rank'>
-                <LottieAnimation className='silver-coin' animationData={AnimationSilverCoin} width='200px'></LottieAnimation>
-                <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-                </div>
-                <div className='name'>{developers[1].name}</div>
-                <LottieAnimation className='silver-medal' animationData={AnimationSilverMedal} width='120px'></LottieAnimation>
-              </div>
-              <div className='rank1 rank'>
-                <LottieAnimation className='crown' animationData={AnimationCrown} width='200px'></LottieAnimation>
-                <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-                </div>
-                <div className='name'>{developers[0].name}</div>
-                <LottieAnimation className='gold-medal' animationData={AnimationGoldMedal} width='140px'></LottieAnimation>
-                <LottieAnimation className='congratulation' animationData={AnimationCongratulation} width='250px' height='350px'></LottieAnimation>
-              </div>
-              <div className='rank3 rank'>
-                <LottieAnimation className='bronze-coin' animationData={AnimationBronzeCoin} width='200px'></LottieAnimation>
-                <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-                </div>
-                <div className='name'>{developers[2].name}</div>
-                <LottieAnimation className='bronze-medal' animationData={AnimationBronzeMedal} width='120px'></LottieAnimation>
-              </div>
-              {/* <LottieAnimation animationData={AnimationCrown} width='20%'/> */}
-            </div>
-            {/* 开发者rank */}
-            <div className='bottom'>
-              {developers.map((dev, index) => (
-                <DeveloperCard key={index} className='developer' {...dev} />
-              ))}
-            </div>
+    <div className='layout'
+      ref={containerRef}
+      onScroll={handleScroll}>
+      <div className='title'>
+        <div className='left'></div>
+        <div className='center'>
+          <div className='logo1'>
+            <Logo darkLogo={logoIcons['githubDark']} lightLogo={logoIcons['githubLight']}></Logo>
           </div>
-         
-        </Content>
-      </Layout>
-    </Layout>
+          <div className='text'>
+            Github开发者能力排行榜
+          </div>
+          <div className='logo2'>
+            <Logo darkLogo={logoIcons['rankDark']} lightLogo={logoIcons['rankLight']}></Logo>
+          </div>
+        </div>
+        <div className='right'>
+          <ThemeToggle></ThemeToggle>
+        </div>
+      </div>
+      <div className="selector-bar">
+        <Select
+          placeholder="选择领域"
+          onChange={handleFieldChange}
+          className='selector'
+          style={{marginRight: '10px'}}
+        >
+          {fields.map((field) => (
+            <Option key={field} value={field}>
+              {field}
+            </Option>
+          ))}
+        </Select>
+        <Select
+          placeholder="选择国籍"
+          onChange={handleNationChange}
+          className='selector'
+          style={{marginLeft: '10px'}}
+        >
+          {countries.map((country) => (
+            <Option key={country} value={country}>
+              {country}
+            </Option>
+          ))}
+        </Select>
+      </div>
+      <div className='top3-title'>
+        <div className='top3-logo'>
+          <Logo darkLogo={logoIcons['top3Dark']} lightLogo={logoIcons['top3Light']}></Logo>
+        </div>
+        <div className='text'>Top3开发者</div>
+      </div>
+      <div className='outer'>
+        {/* top3开发者 */}
+        <div className='top'>
+          <div className='rank2 rank'>
+            <LottieAnimation className='silver-coin' animationData={AnimationSilverCoin} width='200px'></LottieAnimation>
+            <div className='avatar'>
+              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+            </div>
+            <div className='name'>{developers[1].name}</div>
+            <LottieAnimation className='silver-medal' animationData={AnimationSilverMedal} width='120px'></LottieAnimation>
+          </div>
+          <div className='rank1 rank'>
+            <LottieAnimation className='crown' animationData={AnimationCrown} width='200px'></LottieAnimation>
+            <div className='avatar'>
+              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+            </div>
+            <div className='name'>{developers[0].name}</div>
+            <LottieAnimation className='gold-medal' animationData={AnimationGoldMedal} width='140px'></LottieAnimation>
+            <LottieAnimation className='congratulation' animationData={AnimationCongratulation} width='250px' height='350px'></LottieAnimation>
+          </div>
+          <div className='rank3 rank'>
+            <LottieAnimation className='bronze-coin' animationData={AnimationBronzeCoin} width='200px'></LottieAnimation>
+            <div className='avatar'>
+              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+            </div>
+            <div className='name'>{developers[2].name}</div>
+            <LottieAnimation className='bronze-medal' animationData={AnimationBronzeMedal} width='120px'></LottieAnimation>
+          </div>
+          {/* <LottieAnimation animationData={AnimationCrown} width='20%'/> */}
+        </div>
+        <div className='ranking-title'>
+        <div className='ranking-logo'>
+          <Logo darkLogo={logoIcons['rankingDark']} lightLogo={logoIcons['rankingLight']}></Logo>
+        </div>
+        <div className='text'>开发者能力排行榜</div>
+      </div>
+        {/* 开发者rank */}
+        <div className='bottom'>
+          <div className='grid'>
+            {developers.map((dev, index) => (
+              <DeveloperCard key={index} className='developer' {...dev} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

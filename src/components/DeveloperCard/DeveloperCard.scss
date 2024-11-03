@@ -2,14 +2,15 @@
   width: 200px;
   height: 300px;
   border-radius: 20px;
-  background: linear-gradient(180deg, #71b3fa 0%, #9ac9f5 100%);
+  // background: linear-gradient(180deg, #71b3fa 0%, #9ac9f5 100%);
+  background: var(--card-gradient);
   position: relative;
   padding-top: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* 默认阴影 */
-  transition: box-shadow 0.3s ease; /* 阴影过渡效果 */
+  box-shadow: var(--card-border-box-shadow); /* 默认阴影 */
+  transition: box-shadow 0.3s ease, background 0.3s ease; /* 阴影过渡效果 */
   cursor: pointer; /* 鼠标悬停时变成手形 */
   &:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5); /* 悬停时扩大阴影 */
+    box-shadow: var(--card-border-hover-box-shadow); /* 悬停时扩大阴影 */
   }
   .rank{
     position: absolute;
@@ -51,7 +52,8 @@
     height: 100px;
     border-radius: 50%;
     margin-left: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--card-avatar-box-shadow);
+    transition: box-shadow 0.3s ease; /* 阴影过渡 */;
     overflow: hidden;
     img{
       width: 100%;
@@ -63,24 +65,31 @@
     }
   }
   .name{
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    height: 60px;
     text-align: center;
     margin-top: 10px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
   }
   .followers{
     display: flex;
     padding: 0 8px;
+    margin-bottom: 20px;
     .left-divider,
     .right-divider{
       flex-grow: 1;
       height: 1px;
-      background-color: #ccc;
       margin-top: 8px;
+      background-color: var(--secondary-text-color);
+      transition: background-color 0.3s ease;
     }
     .count{
-      color: #ccc;
       font-size: 12px;
       padding: 0 5px;
+      color: var(--secondary-text-color);
+      transition: color 0.3s ease;
     }
   }
   .rate{
@@ -88,11 +97,16 @@
     justify-items: center;
   }
   .repo{
-    font-size: 16px;
+    font-size: 13px;
     text-align: center;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+    margin-top: 30px;
     span{
       font-weight: bold;
       font-size: 18px;
+      color: var(--text-color);
+      transition: color 0.3s ease;
     }
   }
 }
@@ -104,14 +118,15 @@
   margin-top: 20px;
   line-height: 35px;
   border-radius: 30px;
-  background-color: #91caff;
+  // background-color: #91caff;
+  background-color: var(--button-color);
   transition: background-color 0.3s ease; /* 背景颜色过渡 */;
   cursor: pointer;
 
   display: flex;
   justify-content: center;
   &:hover{
-    background-color: #69b1ff; /* 悬停时改变背景颜色 */
+    background-color: var(--button-hover-color); /* 悬停时改变背景颜色 */
   }
   .icon{
     width: 45px;
@@ -124,5 +139,8 @@
   }
   .text{
     font-weight: bold;
+    font-size: 10px;
+    color: var(--text-color);
+    transition: color 0.3s ease;
   }
 }

@@ -1,0 +1,63 @@
+// src/styles/theme.scss
+// 定义浅色模式变量
+$light-bg-color: #ffffff;
+$light-card-color: #f8f9fa;
+$light-text-color: #333333;
+$light-secondary-text-color: #666666;
+$light-border-color: #e0e0e0;
+$light-button-color: #E0E0E0;
+$light-button-hover-color: #C0C0C0;
+$light-logo-color: #333333;
+$light-card-gradient: linear-gradient(145deg, #ffffff, #f1f1f1);
+$light-top3-box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+$light-card-avatar-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.15);
+$light-card-border-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+$light-card-border-hover-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+
+// 定义深色模式变量
+$dark-bg-color: #121212;
+$dark-card-color: #1e1e1e;
+$dark-text-color: #ffffff;
+$dark-secondary-text-color: #bbbbbb;
+$dark-border-color: #333333;
+$dark-button-color: #5C5C5C;
+$dark-button-hover-color: #787878;
+$dark-logo-color: #ffffff;
+$dark-card-gradient: linear-gradient(145deg, #1e1e1e, #333333);
+$dark-top3-box-shadow: 0 8px 15px rgba(255, 255, 255, 0.3);
+$dark-card-avatar-box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2), 0 8px 16px rgba(255, 255, 255, 0.15);
+$dark-card-border-box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+$dark-card-border-hover-box-shadow: 0 8px 20px rgba(255, 255, 255, 0.5);
+
+// 应用主题
+:root {
+  --bg-color: #{$light-bg-color};
+  --card-color: #{$light-card-color};
+  --text-color: #{$light-text-color};
+  --secondary-text-color: #{$light-secondary-text-color};
+  --border-color: #{$light-border-color};
+  --button-color: #{$light-button-color};
+  --button-hover-color: #{$light-button-hover-color};
+  --logo-color: #{$light-logo-color};
+  --card-gradient: #{$light-card-gradient};
+  --top3-box-shadow: #{$light-top3-box-shadow};
+  --card-avatar-box-shadow: #{$light-card-avatar-box-shadow};
+  --card-border-box-shadow: #{$light-card-border-box-shadow};
+  --card-border-hover-box-shadow: #{$light-card-border-hover-box-shadow};
+}
+
+[data-theme="dark"] {
+  --bg-color: #{$dark-bg-color};
+  --card-color: #{$dark-card-color};
+  --text-color: #{$dark-text-color};
+  --secondary-text-color: #{$dark-secondary-text-color};
+  --border-color: #{$dark-border-color};
+  --button-color: #{$dark-button-color};
+  --button-hover-color: #{$dark-button-hover-color};
+  --logo-color: #{$dark-logo-color};
+  --card-gradient: #{$dark-card-gradient};
+  --top3-box-shadow: #{$dark-top3-box-shadow};
+  --card-avatar-box-shadow: #{$dark-card-avatar-box-shadow};
+  --card-border-box-shadow: #{$dark-card-border-box-shadow};
+  --card-border-hover-box-shadow: #{$dark-card-border-hover-box-shadow};
+}
