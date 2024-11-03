@@ -12,7 +12,7 @@ const GitHubActivityGraph: React.FC<GitHubActivityGraphProps> = ({ username }) =
       <img
         src={imageUrl}
         alt={`${username}'s GitHub activity graph`}
-        style={{ maxWidth: '100%', borderRadius: '8px' }}
+        style={{ width: '100%', height: '10%' }}
       />
     </div>
   );
