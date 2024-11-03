@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer } from 'antd';
-import { GithubOutlined, BarChartOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
+import { GithubOutlined, BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
@@ -89,13 +89,42 @@ const Developer: React.FC = () => {
 
   return (
     <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
-      <Header>
-        <OpenAIOutlined 
-          style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
-          onClick={showDrawer} 
-        />
-        <Button type="primary" icon={<DoubleRightOutlined style={{ color: 'white' }} />} ghost>
-          排行
+      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <OpenAIOutlined 
+            style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
+            onClick={showDrawer} 
+          />
+          <Button 
+            type="primary" 
+            icon={<DoubleRightOutlined />} 
+            ghost 
+            style={{ 
+              color: 'white',
+              borderColor: 'white',
+              transition: 'background-color 0.3s, border-color 0.3s',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            onClick={() => console.log('排行 clicked')} // 示例点击事件
+          >
+            排行
+          </Button>
+        </div>
+        <Button 
+          type="primary" 
+          icon={<SunOutlined />} 
+          ghost 
+          style={{ 
+            color: 'white',
+            borderColor: 'white',
+            transition: 'background-color 0.3s, border-color 0.3s',
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          onClick={() => console.log('换肤 clicked')} // 示例点击事件
+        >
+          换肤
         </Button>
       </Header>
       <Row gutter={[16, 16]}>
