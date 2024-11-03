@@ -39,7 +39,6 @@ const personalInfo: PersonalInfo = {
   avatarUrl: "https://avatars.githubusercontent.com/u/115935217?v=4",
 };
 
-const ChinaFlag = "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_China.svg";
 
 const Developer: React.FC = () => {
   return (
@@ -91,10 +90,15 @@ const Developer: React.FC = () => {
         <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
           <Row gutter={[16, 16]} style={{ flex: 1 }}>
             <Col span={24}>
-              <Card bordered={false} style={{ height: '100%' }}>
-                <Title level={4}><CodeOutlined /> 项目展示</Title>
-                <Text>项目描述内容：这里可以写关于项目的详细描述，技术栈，贡献情况等。</Text>
-              </Card>
+            <Card bordered={false} style={{ height: '100%' }}>
+            <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
+              <CodeOutlined /> 项目展示
+              
+            </Title>
+            <Text>项目描述内容：这里可以写关于项目的详细描述，技术栈，贡献情况等。</Text>
+          </Card>
+
+
             </Col>
           </Row>
         </Col>
