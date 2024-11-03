@@ -9,7 +9,9 @@ const GitHubStreak: React.FC<GitHubStreakProps> = ({ username }) => {
 
   return (
     <a href={`https://github.com/${username}`}>
-      <img src={url} alt={`${username}'s GitHub Streak`} />
+      <img src={url} alt={`${username}'s GitHub Streak`} 
+      style={{ width: '100%', borderRadius: '8px' }}
+      />
     </a>
   );
 };

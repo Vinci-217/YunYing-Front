@@ -128,31 +128,42 @@ const Developer: React.FC = () => {
         </Col>
       </Row>
 
-        <Card bordered={false} style={{ marginTop: '20px' }}>
-          <Title level={2} style={{ marginBottom: '10px', marginTop: '-5px' }}>
-            <BarChartOutlined /> 可视化分析
+      <Card bordered={false} style={{ marginTop: '20px' }}>
+          <Title className="text-2xl font-semibold mb-4 flex items-center">
+            <BarChartOutlined className="mr-2" />
+            可视化分析
           </Title>
-          <Row gutter={[16, 16]}>
-          <Col span={24}>
-          <GitHubActivityGraph username="Vinci-217"  />
-          </Col>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubStats username="Vinci-217" />
-              <GitHubProductiveTime username="Vinci-217" />
-            </Col>
-
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubTopLangs username="Vinci-217" />
-            </Col>
-            <Col xs={24} sm={12} md={12} lg={6}>
-              <GitHubStreak username="Vinci-217" />
-            </Col>
-
-            <Col span={24}>
-              <ActivityGraph username='Vinci-217' />
-            </Col>
-          </Row>
+          <div className="space-y-4">
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <GitHubActivityGraph username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <GitHubStats username="Vinci-217" />
+              </Col>
+              <Col xs={24} md={12}>
+                <GitHubProductiveTime username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <GitHubStreak username="Vinci-217" />
+              </Col>
+              <Col xs={24} md={12}>
+                <GitHubTopLangs username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <ActivityGraph username='Vinci-217' />
+              </Col>
+            </Row>
+          </div>
         </Card>
+
+
     </Layout>
   );
 };
