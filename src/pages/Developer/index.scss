@@ -46,25 +46,22 @@
   background-color: white; /* 设置卡片头部背景为白色 */
 }
 
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-.typing-effect {
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 2px solid; /* 光标 */
-  width: 0;
-  animation: typing 4s steps(40, end), blink-caret 0.75s step-end infinite;
-}
-
 @keyframes blink-caret {
   50% {
     border-color: transparent;
   }
 }
+.ai-reply {
+  white-space: pre-wrap; /* 保持空格和换行 */
+}
+
+/* 打字机特效样式 */
+@keyframes typing {
+  from {
+    opacity: 0; /* 初始透明 */
+  }
+  to {
+    opacity: 1; /* 最终可见 */
+  }
+}
+

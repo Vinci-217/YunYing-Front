@@ -8,7 +8,7 @@ const GitHubProductiveTime: React.FC<GitHubProductiveTimeProps> = ({ username })
   const imageUrl = `http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=${username}&theme=default&utcOffset=8`;
 
   return (
-    <div style={{ textAlign: 'center', margin: '20px 0', height: '400px' }}>
+    <div style={{ textAlign: 'center', margin: '20px 0'}}>
       <img
         src={imageUrl}
         alt={`${username}'s GitHub productive time`}
