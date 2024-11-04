@@ -10,6 +10,7 @@ import GitHubTopLangs from '@/components/GitHubTopLangs/GitHubTopLangs';
 import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
+
 const { Text, Title } = Typography;
 const { Header } = Layout;
 
@@ -62,6 +63,7 @@ const Developer: React.FC = () => {
   const [displayedText, setDisplayedText] = useState('');
   const fullText = "这里是抽屉的内容，具有打字机特效。";
   const navigate = useNavigate();
+
   const showDrawer = () => {
     setDrawerVisible(true);
     setDisplayedText(''); // 重置显示文本
@@ -71,25 +73,22 @@ const Developer: React.FC = () => {
     setDrawerVisible(false);
   };
 
+  const typeText = (text: string, index: number = 0) => {
+    if (index < text.length) {
+      setDisplayedText(prev => prev + text[index]);
+      setTimeout(() => typeText(text, index + 1), 200); // 每200毫秒打一个字符
+    }
+  };
+
   useEffect(() => {
     if (drawerVisible) {
-      let index = 0;
-      const interval = setInterval(() => {
-        if (index < fullText.length) {
-          setDisplayedText(prev => prev + fullText[index]);
-          index++;
-        } else {
-          clearInterval(interval);
-        }
-      }, 200); // 每100毫秒打一个字符
-
-      return () => clearInterval(interval); // 清理定时器
+      typeText(fullText); // 开始打字
     }
   }, [drawerVisible]);
 
   return (
     <Layout>
-            <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <OpenAIOutlined 
             style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
@@ -127,133 +126,132 @@ const Developer: React.FC = () => {
           换肤
         </Button>
       </Header>
-    <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+      <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
 
-      <Row gutter={[16, 16]}>
-        <Col xs={24} md={6}>
-          <Card bordered={false} style={{ height: '100%' }}>
-            <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
-              <Avatar size={64} src={personalInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
-              <Text strong style={{ fontSize: '18px', textAlign: 'center' }}><UserOutlined /> {personalInfo.name}</Text>
-              <Text type="secondary" style={{ textAlign: 'center' }}>{personalInfo.bio}</Text>
-              <Row justify="center" style={{ width: '100%' }}>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text><MailOutlined /> {personalInfo.email}</Text>
-                </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
-                </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text className="flex items-center">
-                    <GlobalOutlined className="mr-1" /> 国籍：
-                    <span className="flex items-center">
-                      <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{ 
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={6}>
+            <Card bordered={false} style={{ height: '100%' }}>
+              <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
+                <Avatar size={64} src={personalInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
+                <Text strong style={{ fontSize: '18px', textAlign: 'center' }}><UserOutlined /> {personalInfo.name}</Text>
+                <Text type="secondary" style={{ textAlign: 'center' }}>{personalInfo.bio}</Text>
+                <Row justify="center" style={{ width: '100%' }}>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text><MailOutlined /> {personalInfo.email}</Text>
+                  </Col>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                  </Col>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text className="flex items-center">
+                      <GlobalOutlined className="mr-1" /> 国籍：
+                      <span className="flex items-center">
+                        <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{ 
                           width: '20px', 
                           height: '15px', 
                           marginRight: '5px', 
                           position: 'relative', 
                           top: '3px' 
                         }} />
-                      {personalInfo.nation}
-                    </span> | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
-                  </Text>
-                </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
-                </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
-                </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
-                </Col>
-              </Row>
-            </Space>
-          </Card>
-        </Col>
-        <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
-          <Row gutter={[16, 16]} style={{ flex: 1 }}>
-            <Col span={24}>
-              <Card bordered={false} style={{ height: '100%' }}>
-                <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
-                  <CodeOutlined /> 项目展示
-                </Title>
-                <div style={{ maxHeight: '300px', overflowY: 'hidden', padding: '8px' }}>
-                  <Row gutter={[16, 16]}>
-                    {projects.slice(0, 4).map((project, index) => (
-                      <Col span={12} key={index}>
-                        <RepositoryCard 
-                          name={project.name} 
-                          description={project.description} 
-                          stars={project.stars} 
-                          forks={project.forks} 
-                          onClick={() => window.open(project.url)} 
-                        />
-                      </Col>
-                    ))}
-                  </Row>
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+                        {personalInfo.nation}
+                      </span> | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
+                    </Text>
+                  </Col>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
+                  </Col>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
+                  </Col>
+                  <Col span={24} style={{ textAlign: 'center' }}>
+                    <Text><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
+                  </Col>
+                </Row>
+              </Space>
+            </Card>
+          </Col>
+          <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
+            <Row gutter={[16, 16]} style={{ flex: 1 }}>
+              <Col span={24}>
+                <Card bordered={false} style={{ height: '100%' }}>
+                  <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
+                    <CodeOutlined /> 项目展示
+                  </Title>
+                  <div style={{ maxHeight: '300px', overflowY: 'hidden', padding: '8px' }}>
+                    <Row gutter={[16, 16]}>
+                      {projects.slice(0, 4).map((project, index) => (
+                        <Col span={12} key={index}>
+                          <RepositoryCard 
+                            name={project.name} 
+                            description={project.description} 
+                            stars={project.stars} 
+                            forks={project.forks} 
+                            onClick={() => window.open(project.url)} 
+                          />
+                        </Col>
+                      ))}
+                    </Row>
+                  </div>
+                </Card>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
 
-      <Card bordered={false} style={{ marginTop: '20px' }}>
-        <Title className="text-2xl font-semibold mb-4 flex items-center">
-          <BarChartOutlined className="mr-2" />
-          可视化分析
-        </Title>
-        <div className="space-y-4">
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <GitHubActivityGraph username="Vinci-217" />
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
-            <GitHubProductiveTime username="Vinci-217" />
-              
-            </Col>
-            <Col xs={24} md={12}>
-            
-            <GitHubTopLangs username="Vinci-217" />
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12}>
-              <GitHubStreak username="Vinci-217" />
-            </Col>
-            <Col xs={24} md={12}>
-            <GitHubStats username="Vinci-217" />
-           
-              
-            </Col>
-          </Row>
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <ActivityGraph username='Vinci-217' />
-            </Col>
-          </Row>
-        </div>
-      </Card>
+        <Card bordered={false} style={{ marginTop: '20px' }}>
+          <Title className="text-2xl font-semibold mb-4 flex items-center">
+            <BarChartOutlined className="mr-2" />
+            可视化分析
+          </Title>
+          <div className="space-y-4">
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <GitHubActivityGraph username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <GitHubProductiveTime username="Vinci-217" />
+              </Col>
+              <Col xs={24} md={12}>
+                <GitHubTopLangs username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col xs={24} md={12}>
+                <GitHubStreak username="Vinci-217" />
+              </Col>
+              <Col xs={24} md={12}>
+                <GitHubStats username="Vinci-217" />
+              </Col>
+            </Row>
+            <Row gutter={[16, 16]}>
+              <Col span={24}>
+                <ActivityGraph username='Vinci-217' />
+              </Col>
+            </Row>
+          </div>
+        </Card>
 
-      {/* 抽屉组件 */}
-      <Drawer
-        title="AI报告"
-        placement="left"
-        closable={true}
-        onClose={onClose}
-        visible={drawerVisible}
-      >
-        <p style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{displayedText}</p>
-      </Drawer>
-     </Layout>
+        {/* 抽屉组件 */}
+        <Drawer
+          title="AI报告"
+          placement="left"
+          closable={true}
+          onClose={onClose}
+          visible={drawerVisible}
+        >
+          <p style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{displayedText}</p>
+        </Drawer>
+      </Layout>
     </Layout>
   );
 };
 
 export default Developer;
+
+
+
 
 
 
