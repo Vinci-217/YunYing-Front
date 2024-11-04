@@ -12,6 +12,7 @@ interface LottieAnimationProps {
     minWidth?: string;     // 最小宽度
     maxWidth?: string;     // 最大宽度
     className?: string;    // 类名
+    onClick?: () => void;  // 点击事件处理函数
 }
 
 const LottieAnimation: React.FC<LottieAnimationProps> = ({
@@ -22,10 +23,11 @@ const LottieAnimation: React.FC<LottieAnimationProps> = ({
     autoplay = true,
     minWidth = '100px',
     maxWidth = '300px',
-    className = ''
+    className = '',
+    onClick = () => {}
 }) => {
     return (
-      <div className={className} style={{ width, height, minWidth, maxWidth, overflow: 'hidden' }}>
+      <div onClick={onClick} className={className} style={{ width, height, minWidth, maxWidth, overflow: 'hidden' }}>
         <Player
             autoplay={autoplay}
             loop={loop}

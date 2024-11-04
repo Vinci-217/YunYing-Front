@@ -1,7 +1,8 @@
 // Logo.tsx
 // 封装Logo组件，用于svg图切换
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './Logo.scss';
+import { useTheme } from '@/hooks/theme';
 
 interface LogoProps {
   darkLogo: string;
@@ -10,20 +11,7 @@ interface LogoProps {
 }
 
 const Logo: React.FC<LogoProps> = ({ darkLogo, lightLogo, altText = 'Logo' }) => {
-  const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.getAttribute('data-theme') === 'dark'
-  );
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      setIsDarkMode(isDark);
-    });
-   
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-    return () => observer.disconnect();
-  }, []);
+  const { isDarkMode } = useTheme();
 
   return (
     <img

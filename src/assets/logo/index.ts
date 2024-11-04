@@ -9,7 +9,11 @@ const logoIcons = {
   rankingDark: require('./ranking-dark.svg').default,
   rankingLight: require('./ranking-light.svg').default,
   top3Dark: require('./top3-dark.svg').default,
-  top3Light: require('./top3-light.svg').default
+  top3Light: require('./top3-light.svg').default,
+  homeDark: require('./home-dark.svg').default,
+  homeLight: require('./home-light.svg').default,
+  speechDark: require('./speech-dark.svg').default,
+  speechLight: require('./speech-light.svg').default
 };
 
 export default logoIcons;
