@@ -1,0 +1,251 @@
+.home-layout{
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease; /* 背景颜色过渡 */;
+  &::-webkit-scrollbar {
+    height: 0px;               /* 控制滚动条的高度 */
+    width: 0px;
+  }
+
+  .title{
+    display: flex;
+    justify-content: space-between;
+    .left{
+      width: 50px;
+    }
+    .right{
+      width: 50px;
+      padding-top: 15px;
+    }
+  }
+  .content{
+    .mode0{
+      padding-top: 200px;
+      animation: show 2s ease;
+      .animation-outer{
+        display: flex;
+        justify-content: center;
+        .animation-wrapper{
+          width: 400px;
+          position: relative;
+          .animation-github{
+            cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: -120px;
+            animation: fadeInUp 3s ease forwards;
+            z-index: 99;
+          }
+          .speech-bubble{
+            position: absolute;
+            width: 200px;
+            height: 125px;
+            background-repeat: no-repeat;
+            background-size: cover;
+            left: 100px;
+            top: -200px;
+            animation: bubbleShow 3.5s ease;
+            .speech-content{
+              position: absolute;
+              top: 0;
+              padding: 10px;
+              color: var(--text-color);
+              transition: color 0.3s ease;
+              font-size: 16px;
+            }
+          }
+          // 渐显上移动画
+          @keyframes fadeInUp {
+            0% {
+              opacity: 0;
+              transform: translateY(150px); /* 从下方开始 */
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0); /* 上移至原位置 */
+            }
+          }
+          // bubble渐显动画
+          @keyframes bubbleShow {
+            0% {
+              opacity: 0;
+            }
+            80%{
+              opacity: 0;
+            }
+            100% {
+              opacity: 1;
+            }
+          }
+        }
+      }
+      .title{
+        display: flex;
+        justify-content: center;
+        .logo{
+          width: 50px;
+          height: 50px;
+        }
+        .text{
+          padding-left: 10px;
+          font-weight: bold;
+          font-size: 35px;
+          color: var(--text-color);
+          transition: color 0.3s ease;
+        }
+      }
+      .introduction{
+        text-align: center;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+        font-size: 15px;
+        line-height: 22px;
+      }
+      .btns{
+        display: flex;
+        justify-content: center;
+        .btn{
+          width: 160px;
+          height: 35px;
+          line-height: 35px;
+          border-radius: 30px;
+          background-color: var(--button-color);
+          transition: background-color 0.3s ease; /* 背景颜色过渡 */;
+          cursor: pointer;
+          text-align: center;
+          color: var(--text-color);
+          transition: color 0.3s ease; /* 文本颜色过渡 */;
+          font-weight: bold;
+          font-size: 13px;
+          &:hover{
+            background-color: var(--button-hover-color); /* 悬停时改变背景颜色 */
+          }
+        }
+        .btn1{
+          margin-right: 10px;
+        }
+        .btn2{
+          margin-left: 10px;
+        }
+      }
+    }
+    .mode1{
+      padding-top: 150px;
+      animation: show 0.5s ease;
+      .title{
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 35px;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+      }
+      .introduction{
+        text-align: center;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+        font-size: 15px;
+        line-height: 22px;
+      }
+      .search-wrapper{
+        display: flex;
+        justify-content: center;
+        .search{
+          width: 400px;
+        }
+      }
+      .btns{
+        display: flex;
+        justify-content: center;
+        .btn{
+          margin-top: 20px;
+          width: 160px;
+          height: 35px;
+          line-height: 35px;
+          border-radius: 30px;
+          background-color: var(--button-color);
+          transition: background-color 0.3s ease; /* 背景颜色过渡 */;
+          cursor: pointer;
+          text-align: center;
+          color: var(--text-color);
+          transition: color 0.3s ease; /* 文本颜色过渡 */;
+          font-weight: bold;
+          font-size: 13px;
+          &:hover{
+            background-color: var(--button-hover-color); /* 悬停时改变背景颜色 */
+          }
+        }
+        .btn1{
+          margin-right: 30px;
+        }
+        .btn2{
+          margin-left: 30px;
+        }
+      }
+    }
+    .mode2{
+      padding-top: 150px;
+      animation: show 0.5s ease;
+      .title{
+        display: flex;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 35px;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+      }
+      .introduction{
+        text-align: center;
+        color: var(--text-color);
+        transition: color 0.3s ease;
+        font-size: 15px;
+        line-height: 22px;
+      }
+      .search-wrapper{
+        display: flex;
+        justify-content: center;
+        .search{
+          width: 400px;
+        }
+      }
+      .btns{
+        display: flex;
+        justify-content: center;
+        .btn{
+          margin-top: 20px;
+          width: 160px;
+          height: 35px;
+          line-height: 35px;
+          border-radius: 30px;
+          background-color: var(--button-color);
+          transition: background-color 0.3s ease; /* 背景颜色过渡 */;
+          cursor: pointer;
+          text-align: center;
+          color: var(--text-color);
+          transition: color 0.3s ease; /* 文本颜色过渡 */;
+          font-weight: bold;
+          font-size: 13px;
+          &:hover{
+            background-color: var(--button-hover-color); /* 悬停时改变背景颜色 */
+          }
+        }
+        .btn1{
+          margin-right: 30px;
+        }
+        .btn2{
+          margin-left: 30px;
+        }
+      }
+    }
+    @keyframes show {
+      from{
+        opacity: 0;
+      }
+      to{
+        opacity: 1;
+      }
+    }
+  }
+}

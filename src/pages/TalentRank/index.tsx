@@ -7,6 +7,8 @@ import Logo from '@/components/Logo/Logo';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import { Result } from '@/types/Result';
 import { Developer } from '@/types/TalentRank';
+import { useTheme } from '@/hooks/theme';
+import { useNavigate } from 'react-router-dom';
 
 import { getFieldList, getNationList, getDeveloperList } from '@/api/path/talentrank';
 
@@ -41,6 +43,8 @@ interface Developer1 {
 }
 
 const TalentRank: React.FC = () => {
+  const {isDarkMode} = useTheme();
+  const navigate = useNavigate();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -210,7 +214,26 @@ const TalentRank: React.FC = () => {
       ref={containerRef}
       onScroll={handleScroll}>
       <div className='title'>
-        <div className='left'></div>
+        <div className='left'>
+          <div className='home-btn' onClick={() => navigate('/')}>
+            {
+              isDarkMode ? 
+                (<div className='dark-mode'>
+                  <div className='img'>
+                    <img src={logoIcons['homeDark']} 
+                      style={{width: '100%', height: '100%', paddingTop: '5px'}}></img>
+                  </div>
+                </div>)
+                : 
+                (<div className='light-mode'>
+                  <div className='img'>
+                    <img src={logoIcons['homeLight']} 
+                      style={{width: '100%', height: '100%', paddingTop: '5px'}}></img>
+                  </div>
+                </div>)
+            }
+          </div>
+        </div>
         <div className='center'>
           <div className='logo1'>
             <Logo darkLogo={logoIcons['githubDark']} lightLogo={logoIcons['githubLight']}></Logo>

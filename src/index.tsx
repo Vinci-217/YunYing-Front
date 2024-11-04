@@ -5,6 +5,8 @@ import App from './App';
 import { Provider } from 'react-redux';
 import store from './store';
 
+const themeMode = localStorage.getItem('theme') === 'dark' ?'dark':'light';
+document.documentElement.setAttribute('data-theme', themeMode);
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
