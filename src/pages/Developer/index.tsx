@@ -9,7 +9,7 @@ import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProduc
 import GitHubTopLangs from '@/components/GitHubTopLangs/GitHubTopLangs';
 import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
-
+import { useNavigate } from 'react-router-dom';
 const { Text, Title } = Typography;
 const { Header } = Layout;
 
@@ -61,7 +61,7 @@ const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   const fullText = "这里是抽屉的内容，具有打字机特效。";
-
+  const navigate = useNavigate();
   const showDrawer = () => {
     setDrawerVisible(true);
     setDisplayedText(''); // 重置显示文本
@@ -81,15 +81,15 @@ const Developer: React.FC = () => {
         } else {
           clearInterval(interval);
         }
-      }, 100); // 每100毫秒打一个字符
+      }, 200); // 每100毫秒打一个字符
 
       return () => clearInterval(interval); // 清理定时器
     }
   }, [drawerVisible]);
 
   return (
-    <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
-      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Layout>
+            <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <OpenAIOutlined 
             style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
@@ -106,7 +106,7 @@ const Developer: React.FC = () => {
             }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-            onClick={() => console.log('排行 clicked')} // 示例点击事件
+            onClick={() => navigate('/talentrank')} // 示例点击事件
           >
             排行
           </Button>
@@ -127,6 +127,8 @@ const Developer: React.FC = () => {
           换肤
         </Button>
       </Header>
+    <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+
       <Row gutter={[16, 16]}>
         <Col xs={24} md={6}>
           <Card bordered={false} style={{ height: '100%' }}>
@@ -210,10 +212,12 @@ const Developer: React.FC = () => {
           </Row>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={12}>
-              <GitHubStats username="Vinci-217" />
+            <GitHubProductiveTime username="Vinci-217" />
+              
             </Col>
             <Col xs={24} md={12}>
-              <GitHubProductiveTime username="Vinci-217" />
+            
+            <GitHubTopLangs username="Vinci-217" />
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
@@ -221,7 +225,9 @@ const Developer: React.FC = () => {
               <GitHubStreak username="Vinci-217" />
             </Col>
             <Col xs={24} md={12}>
-              <GitHubTopLangs username="Vinci-217" />
+            <GitHubStats username="Vinci-217" />
+           
+              
             </Col>
           </Row>
           <Row gutter={[16, 16]}>
@@ -240,13 +246,18 @@ const Developer: React.FC = () => {
         onClose={onClose}
         visible={drawerVisible}
       >
-        <p>{displayedText}</p>
+        <p style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{displayedText}</p>
       </Drawer>
+     </Layout>
     </Layout>
   );
 };
 
 export default Developer;
+
+
+
+
 
 
 
