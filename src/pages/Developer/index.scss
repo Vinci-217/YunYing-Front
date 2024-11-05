@@ -1,3 +1,4 @@
+
 .layout {
   min-height: 10vh;
 }
@@ -78,4 +79,110 @@
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+}
+// index.scss
+// Header 样式
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #121212;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.openai-icon {
+  color: white;
+  margin-right: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ranking-button {
+  color: white;
+  border-color: white;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.ranking-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.theme-toggle {
+  line-height: 30px;
+}
+
+// Layout 样式
+.content-layout {
+  background-color: var(--bg-color);
+  transition: background-color 0.3s ease;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+// Profile 样式
+.profile-card {
+  height: 100%;
+}
+
+.profile-space {
+  align-items: center;
+}
+
+.profile-avatar {
+  border: 2px solid black;
+  border-radius: 50%;
+}
+
+.profile-name {
+  font-size: 18px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.profile-bio {
+  text-align: center;
+  color: #888;
+}
+
+.profile-info {
+  text-align: center;
+}
+
+.profile-info-item {
+  margin-bottom: 8px;
+}
+
+// 项目展示
+.projects-row {
+  flex: 1;
+}
+
+// 可视化分析
+.visualization-card {
+  margin-top: 20px;
+}
+
+.visualization-title {
+  font-size: 2rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.visualization-icon {
+  margin-right: 8px;
+}
+
+.visualization-tabs {
+  margin-top: 16px;
+}
+
+// 抽屉样式
+.drawer-text {
+  font-family: monospace;
+  white-space: pre-wrap;
 }

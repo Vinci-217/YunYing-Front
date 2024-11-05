@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer,Tabs  } from 'antd';
+import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer, Tabs } from 'antd';
 import { GithubOutlined, BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
-import './index.scss';
+import './index.scss';  // 引入 SCSS 文件
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
 import * as echarts from 'echarts';
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const { Text, Title } = Typography;
 const { Header } = Layout;
 const { TabPane } = Tabs;
+
 interface PersonalInfo {
   name: string;
   bio: string;
@@ -133,10 +134,8 @@ const pieOption = {
 };
 //玫瑰图数据(starts)
 const roseoption = {
-  
   legend: {
-    
-    top: 'bottom'
+    button:'auto'
   },
   toolbox: {
     show: true,
@@ -147,15 +146,24 @@ const roseoption = {
       saveAsImage: { show: true }
     }
   },
+  
   series: [
     {
       name: '项目星级分布',
       type: 'pie',
-      radius: [50, 250],
+      radius: [20, 140],
       center: ['50%', '50%'],
-      roseType: 'area',
+      roseType: 'radius',
       itemStyle: {
-        borderRadius: 8
+        borderRadius: 5
+      },
+      label: {
+        show: false
+      },
+      emphasis: {
+        label: {
+          show: true
+        }
       },
       data: projects.map(project => ({
         value: project.stars,
@@ -248,7 +256,6 @@ const columnaroption = {
   ]
 };
 
-
 const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
@@ -280,71 +287,50 @@ const Developer: React.FC = () => {
 
   return (
     <Layout>
-      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <Header className="header">
+        <div className="header-left">
           <OpenAIOutlined
-            style={{ color: 'white', marginRight: '8px', fontSize: '24px' }}
+            className="openai-icon"
             onClick={showDrawer}
           />
           <Button
-            type="primary"
+            className="ranking-button"
             icon={<DoubleRightOutlined />}
             ghost
-            style={{
-              color: 'white',
-              borderColor: 'white',
-              transition: 'background-color 0.3s, border-color 0.3s',
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
             onClick={() => navigate('/talentrank')}
           >
             排行
           </Button>
         </div>
-        <div style={{lineHeight: '30px'}}>
-          <ThemeToggle></ThemeToggle>
+        <div className="theme-toggle">
+          <ThemeToggle />
         </div>
-        
       </Header>
-      <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
-
+      <Layout className="content-layout">
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
-            <Card bordered={false} style={{ height: '100%' }}>
-              <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
-                <Avatar size={64} src={personalInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
-                <Text strong style={{ fontSize: '18px', textAlign: 'center' }}><UserOutlined /> {personalInfo.name}</Text>
-                <Text type="secondary" style={{ textAlign: 'center' }}>{personalInfo.bio}</Text>
-                <Row justify="center" style={{ width: '100%' }}>
-                  <Col span={24} style={{ textAlign: 'center' }}>
+            <Card className="profile-card">
+              <Space direction="vertical" size="middle" className="profile-space">
+                <Avatar className="profile-avatar" size={64} src={personalInfo.avatarUrl} />
+                <Text className="profile-name"><UserOutlined /> {personalInfo.name}</Text>
+                <Text className="profile-bio">{personalInfo.bio}</Text>
+                <Row justify="center" className="profile-info">
+                  <Col span={24} className="profile-info-item">
                     <Text><MailOutlined /> {personalInfo.email}</Text>
                   </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
+                  <Col span={24} className="profile-info-item">
                     <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
                   </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text className="flex items-center">
-                      <GlobalOutlined className="mr-1" /> 国籍：
-                      <span className="flex items-center">
-                        <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{
-                          width: '20px',
-                          height: '15px',
-                          marginRight: '5px',
-                          position: 'relative',
-                          top: '3px'
-                        }} />
-                        {personalInfo.nation}
-                      </span> | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
-                    </Text>
+                  <Col span={24} className="profile-info-item">
+                    <Text><GlobalOutlined /> 国籍：{personalInfo.nation} | <CheckCircleOutlined /> 置信度：{personalInfo.confidence}%</Text>
                   </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
+                  <Col span={24} className="profile-info-item">
                     <Text><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
                   </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
+                  <Col span={24} className="profile-info-item">
                     <Text><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
                   </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
+                  <Col span={24} className="profile-info-item">
                     <Text><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
                   </Col>
                 </Row>
@@ -380,43 +366,30 @@ const Developer: React.FC = () => {
           </Col>
         </Row>
 
-        <Card bordered={false} style={{ marginTop: '20px' }}>
-          <Title className="text-2xl font-semibold mb-4 flex items-center">
-            <BarChartOutlined className="mr-2" />
+        <Card className="visualization-card">
+          <Title className="visualization-title">
+            <BarChartOutlined className="visualization-icon" />
             可视化分析
           </Title>
-            
-          <div>
-            <Tabs defaultActiveKey="1" type="card">
-              <TabPane tab="Commits统计" key="1">
-                <Card title="各项目的Commits">
-                  <ReactECharts option={radarOption} />
-                </Card>
-              </TabPane>
-              <TabPane tab="language统计" key="2">
-                <Card title="项目所用语言占比">
-                  <ReactECharts option={pieOption} />
-                </Card>
-              </TabPane>
-              <TabPane tab="Starts统计" key="3">
-                <Card title="各项目的Starts占比">
-                  <ReactECharts option={roseoption} />
-                </Card>
-              </TabPane>
-              <TabPane tab="pr统计" key="4">
-                <Card title="各项目的pr统计">
-                  <ReactECharts option={columnaroption} />
-                </Card>
-              </TabPane>
-            </Tabs>
-          </div>
-          <Card style={{ marginTop: '20px' }}>
-          <ActivityGraph username='Vinci-217'/>
-          </Card>
-            
-            <GitHubActivityGraph username='Vinci-217'/>
-            <GitHubProductiveTime username='Vinci-217'/>
 
+          <Tabs defaultActiveKey="1" className="visualization-tabs">
+            <TabPane tab="Commits统计" key="1">
+              <ReactECharts option={radarOption} />
+            </TabPane>
+            <TabPane tab="language统计" key="2">
+              <ReactECharts option={pieOption} />
+            </TabPane>
+            <TabPane tab="Starts统计" key="3">
+              <ReactECharts option={roseoption} />
+            </TabPane>
+            <TabPane tab="pr统计" key="4">
+              <ReactECharts option={columnaroption} />
+            </TabPane>
+          </Tabs>
+
+          <ActivityGraph username='Vinci-217' />
+          <GitHubActivityGraph username='Vinci-217' />
+          <GitHubProductiveTime username='Vinci-217' />
         </Card>
 
         {/* 抽屉组件 */}
@@ -427,7 +400,7 @@ const Developer: React.FC = () => {
           onClose={onClose}
           visible={drawerVisible}
         >
-          <p style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>{displayedText}</p>
+          <p className="drawer-text">{displayedText}</p>
         </Drawer>
       </Layout>
     </Layout>
