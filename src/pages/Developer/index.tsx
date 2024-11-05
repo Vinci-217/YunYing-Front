@@ -4,13 +4,12 @@ import { GithubOutlined, BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRi
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
-import GitHubStats from '@/components/GitHubStats/GitHubStats';
+import * as echarts from 'echarts';
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
-import GitHubTopLangs from '@/components/GitHubTopLangs/GitHubTopLangs';
-import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
+
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
-import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -35,6 +34,7 @@ interface Project {
   stars: number;
   forks: number;
   url: string;
+  commits: number; // 每个项目的提交数量
 }
 
 const personalInfo: PersonalInfo = {
@@ -52,16 +52,232 @@ const personalInfo: PersonalInfo = {
 };
 
 const projects: Project[] = [
-  { name: '项目1', description: '描述信息1', stars: 150, forks: 30, url: 'https://github.com/project1' },
-  { name: '项目2', description: '描述信息2', stars: 200, forks: 40, url: 'https://github.com/project2' },
-  { name: '项目3', description: '描述信息3', stars: 100, forks: 20, url: 'https://github.com/project3' },
-  { name: '项目4', description: '描述信息4', stars: 250, forks: 50, url: 'https://github.com/project4' },
-  { name: '项目5', description: '描述信息5', stars: 180, forks: 25, url: 'https://github.com/project5' },
+  { name: '项目1', description: '描述信息1', stars: 150, forks: 30, url: 'https://github.com/project1', commits: 120 },
+  { name: '项目2', description: '描述信息2', stars: 200, forks: 40, url: 'https://github.com/project2', commits: 200 },
+  { name: '项目3', description: '描述信息3', stars: 100, forks: 20, url: 'https://github.com/project3', commits: 80 },
+  { name: '项目4', description: '描述信息4', stars: 250, forks: 50, url: 'https://github.com/project4', commits: 150 },
+  { name: '项目5', description: '描述信息5', stars: 180, forks: 25, url: 'https://github.com/project5', commits: 90 },
 ];
+
+// 雷达图的数据(commits)
+const radarOption = {
+  title: {
+    top:'5%',
+    text: '各项目commit数雷达图',
+    left: 'center',
+  },
+  legend: {
+    top:'5%',
+    data: ['提交数量']
+  },
+  radar: {
+    top:'5%',
+    indicator: projects.map(project => ({
+      name: project.name,
+      max: Math.max(...projects.map(p => p.commits)) // 最大值为所有项目的最大提交数
+    }))
+  },
+  series: [
+    {
+      top:'15%',
+      name: '项目提交数量',
+      type: 'radar',
+      data: [
+        {
+          value: projects.map(project => project.commits),
+          name: '提交数量'
+        }
+      ]
+    }
+  ]
+};
+//饼图数据(语言)
+const pieOption = {
+  title: {
+    text: '项目所用语言占比',
+   
+    left: 'center',
+  },
+  tooltip: {
+    trigger: 'item',
+  },
+  legend: {
+    top: '5%',
+    left: 'center',
+  },
+  series: [
+    {
+      name: '使用语言',
+      type: 'pie',
+      radius: ['40%', '70%'],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 10,
+        borderColor: '#fff',
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: 'center',
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 40,
+          fontWeight: 'bold',
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      data: [
+        { value: 1048, name: 'JavaScript' },
+        { value: 735, name: 'Python' },
+        { value: 580, name: 'Java' },
+        { value: 484, name: 'C++' },
+        { value: 300, name: 'Ruby' },
+      ],
+    },
+  ],
+};
+//玫瑰图数据(starts)
+const roseoption = {
+  title: {
+    text: '各项目Starts',
+   
+    left: 'center',
+  },
+  legend: {
+    
+    top: 'bottom'
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  series: [
+    {
+      name: '项目星级分布',
+      type: 'pie',
+      radius: [50, 250],
+      center: ['50%', '50%'],
+      roseType: 'area',
+      itemStyle: {
+        borderRadius: 8
+      },
+      data: projects.map(project => ({
+        value: project.stars,
+        name: project.name
+      }))
+    }
+  ]
+};
+//柱状图数据(fork到时候是pr)
+const columnaroption = {
+  title: {
+    text: '各项目的 Fork 数量',
+    left:'center',
+    textStyle: {
+      color: '#333',
+      fontSize: 18,
+      fontWeight: 'bold'
+    },
+    subtextStyle: {
+      color: '#777',
+      fontSize: 14
+    }
+  },
+  tooltip: {
+    trigger: 'axis',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    textStyle: {
+      color: '#fff'
+    }
+  },
+  legend: {
+    data: ['Fork 数量'],
+    textStyle: {
+      color: '#333'
+    }
+  },
+  toolbox: {
+    show: true,
+    feature: {
+      dataView: { show: true, readOnly: false },
+      restore: { show: true },
+      saveAsImage: { show: true }
+    }
+  },
+  xAxis: {
+    type: 'category',
+    data: projects.map(project => project.name), // 横坐标显示项目名称
+    axisLine: {
+      lineStyle: {
+        color: '#ddd'
+      }
+    },
+    axisLabel: {
+      color: '#666'
+    }
+  },
+  yAxis: {
+    type: 'value',
+    name: 'Fork 数量',
+    nameTextStyle: {
+      color: '#333'
+    },
+    axisLine: {
+      lineStyle: {
+        color: '#ddd'
+      }
+    },
+    axisLabel: {
+      color: '#666'
+    }
+  },
+  series: [
+    {
+      name: 'Fork 数量',
+      type: 'bar',
+      data: projects.map((project, index) => {
+        return {
+          value: project.forks,
+          itemStyle: {
+            // 动态颜色设置
+            color: (function() {
+              const colorList = ['#FFB74D', '#FF7043', '#42a5f5', '#333', '#4caf50']; // 这里你可以自己设置颜色
+              return colorList[index % colorList.length]; // 根据索引循环使用颜色
+            })()
+          }
+        };
+      }),
+      markPoint: {
+        data: [
+          { type: 'max', name: 'Max' },
+          { type: 'min', name: 'Min' }
+        ]
+      },
+      markLine: {
+        data: [{ type: 'average', name: 'Avg' }],
+        lineStyle: {
+          type: 'dashed',
+          color: '#888'
+        }
+      }
+    }
+  ]
+};
+
 
 const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
+
   const fullText = "这里是抽屉的内容，具有打字机特效。";
   const navigate = useNavigate();
 
@@ -91,22 +307,22 @@ const Developer: React.FC = () => {
     <Layout>
       <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <OpenAIOutlined 
-            style={{ color: 'white', marginRight: '8px', fontSize: '24px' }} 
-            onClick={showDrawer} 
+          <OpenAIOutlined
+            style={{ color: 'white', marginRight: '8px', fontSize: '24px' }}
+            onClick={showDrawer}
           />
-          <Button 
-            type="primary" 
-            icon={<DoubleRightOutlined />} 
-            ghost 
-            style={{ 
+          <Button
+            type="primary"
+            icon={<DoubleRightOutlined />}
+            ghost
+            style={{
               color: 'white',
               borderColor: 'white',
               transition: 'background-color 0.3s, border-color 0.3s',
             }}
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-            onClick={() => navigate('/talentrank')} // 示例点击事件
+            onClick={() => navigate('/talentrank')}
           >
             排行
           </Button>
@@ -114,21 +330,7 @@ const Developer: React.FC = () => {
         <div style={{lineHeight: '30px'}}>
           <ThemeToggle></ThemeToggle>
         </div>
-        <Button 
-          type="primary" 
-          icon={<SunOutlined />} 
-          ghost 
-          style={{ 
-            color: 'white',
-            borderColor: 'white',
-            transition: 'background-color 0.3s, border-color 0.3s',
-          }}
-          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'}
-          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-          onClick={() => console.log('换肤 clicked')} // 示例点击事件
-        >
-          换肤
-        </Button>
+        
       </Header>
       <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
 
@@ -150,12 +352,12 @@ const Developer: React.FC = () => {
                     <Text className="flex items-center">
                       <GlobalOutlined className="mr-1" /> 国籍：
                       <span className="flex items-center">
-                        <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{ 
-                          width: '20px', 
-                          height: '15px', 
-                          marginRight: '5px', 
-                          position: 'relative', 
-                          top: '3px' 
+                        <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{
+                          width: '20px',
+                          height: '15px',
+                          marginRight: '5px',
+                          position: 'relative',
+                          top: '3px'
                         }} />
                         {personalInfo.nation}
                       </span> | <CheckCircleOutlined className="ml-1" /> 置信度：{personalInfo.confidence}%
@@ -174,6 +376,7 @@ const Developer: React.FC = () => {
               </Space>
             </Card>
           </Col>
+
           <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
             <Row gutter={[16, 16]} style={{ flex: 1 }}>
               <Col span={24}>
@@ -185,12 +388,12 @@ const Developer: React.FC = () => {
                     <Row gutter={[16, 16]}>
                       {projects.slice(0, 4).map((project, index) => (
                         <Col span={12} key={index}>
-                          <RepositoryCard 
-                            name={project.name} 
-                            description={project.description} 
-                            stars={project.stars} 
-                            forks={project.forks} 
-                            onClick={() => window.open(project.url)} 
+                          <RepositoryCard
+                            name={project.name}
+                            description={project.description}
+                            stars={project.stars}
+                            forks={project.forks}
+                            onClick={() => window.open(project.url)}
                           />
                         </Col>
                       ))}
@@ -207,34 +410,18 @@ const Developer: React.FC = () => {
             <BarChartOutlined className="mr-2" />
             可视化分析
           </Title>
-          <div className="space-y-4">
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <GitHubActivityGraph username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={12}>
-                <GitHubProductiveTime username="Vinci-217" />
-              </Col>
-              <Col xs={24} md={12}>
-                <GitHubTopLangs username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} md={12}>
-                <GitHubStreak username="Vinci-217" />
-              </Col>
-              <Col xs={24} md={12}>
-                <GitHubStats username="Vinci-217" />
-              </Col>
-            </Row>
-            <Row gutter={[16, 16]}>
-              <Col span={24}>
-                <ActivityGraph username='Vinci-217' />
-              </Col>
-            </Row>
-          </div>
+            {/* <Card style={{height:'700px'}}>
+            <ReactECharts option={radarOption} />
+            </Card>
+            
+            <ReactECharts option={pieOption} />
+            <ReactECharts option={roseoption}/>
+            <ReactECharts option={columnaroption} /> */}
+            
+            <ActivityGraph username='Vinci-217'/>
+            <GitHubActivityGraph username='Vinci-217'/>
+            <GitHubProductiveTime username='Vinci-217'/>
+
         </Card>
 
         {/* 抽屉组件 */}
@@ -253,6 +440,8 @@ const Developer: React.FC = () => {
 };
 
 export default Developer;
+
+
 
 
 
