@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer } from 'antd';
+import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer,Tabs  } from 'antd';
 import { GithubOutlined, BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
-
+const { TabPane } = Tabs;
 interface PersonalInfo {
   name: string;
   bio: string;
@@ -62,15 +62,8 @@ const projects: Project[] = [
 
 // 雷达图的数据(commits)
 const radarOption = {
-  title: {
-    top:'5%',
-    text: '各项目commit数雷达图',
-    left: 'center',
-  },
-  legend: {
-    top:'5%',
-    data: ['提交数量']
-  },
+  
+ 
   radar: {
     top:'5%',
     indicator: projects.map(project => ({
@@ -92,13 +85,10 @@ const radarOption = {
     }
   ]
 };
+
 //饼图数据(语言)
 const pieOption = {
-  title: {
-    text: '项目所用语言占比',
-   
-    left: 'center',
-  },
+ 
   tooltip: {
     trigger: 'item',
   },
@@ -143,11 +133,7 @@ const pieOption = {
 };
 //玫瑰图数据(starts)
 const roseoption = {
-  title: {
-    text: '各项目Starts',
-   
-    left: 'center',
-  },
+  
   legend: {
     
     top: 'bottom'
@@ -180,19 +166,7 @@ const roseoption = {
 };
 //柱状图数据(fork到时候是pr)
 const columnaroption = {
-  title: {
-    text: '各项目的 Fork 数量',
-    left:'center',
-    textStyle: {
-      color: '#333',
-      fontSize: 18,
-      fontWeight: 'bold'
-    },
-    subtextStyle: {
-      color: '#777',
-      fontSize: 14
-    }
-  },
+  
   tooltip: {
     trigger: 'axis',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
@@ -411,15 +385,35 @@ const Developer: React.FC = () => {
             <BarChartOutlined className="mr-2" />
             可视化分析
           </Title>
-            <Card style={{height:'700px'}}>
-            <ReactECharts option={radarOption} />
-            </Card>
             
-            <ReactECharts option={pieOption} />
-            <ReactECharts option={roseoption}/>
-            <ReactECharts option={columnaroption} />
+          <div>
+            <Tabs defaultActiveKey="1" type="card">
+              <TabPane tab="Commits统计" key="1">
+                <Card title="各项目的Commits">
+                  <ReactECharts option={radarOption} />
+                </Card>
+              </TabPane>
+              <TabPane tab="language统计" key="2">
+                <Card title="项目所用语言占比">
+                  <ReactECharts option={pieOption} />
+                </Card>
+              </TabPane>
+              <TabPane tab="Starts统计" key="3">
+                <Card title="各项目的Starts占比">
+                  <ReactECharts option={roseoption} />
+                </Card>
+              </TabPane>
+              <TabPane tab="pr统计" key="4">
+                <Card title="各项目的pr统计">
+                  <ReactECharts option={columnaroption} />
+                </Card>
+              </TabPane>
+            </Tabs>
+          </div>
+          <Card style={{ marginTop: '20px' }}>
+          <ActivityGraph username='Vinci-217'/>
+          </Card>
             
-            <ActivityGraph username='Vinci-217'/>
             <GitHubActivityGraph username='Vinci-217'/>
             <GitHubProductiveTime username='Vinci-217'/>
 
