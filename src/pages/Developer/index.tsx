@@ -7,6 +7,7 @@ import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivity
 import * as echarts from 'echarts';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
+import ReactECharts from 'echarts-for-react';
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
@@ -410,13 +411,13 @@ const Developer: React.FC = () => {
             <BarChartOutlined className="mr-2" />
             可视化分析
           </Title>
-            {/* <Card style={{height:'700px'}}>
+            <Card style={{height:'700px'}}>
             <ReactECharts option={radarOption} />
             </Card>
             
             <ReactECharts option={pieOption} />
             <ReactECharts option={roseoption}/>
-            <ReactECharts option={columnaroption} /> */}
+            <ReactECharts option={columnaroption} />
             
             <ActivityGraph username='Vinci-217'/>
             <GitHubActivityGraph username='Vinci-217'/>
