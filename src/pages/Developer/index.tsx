@@ -5,7 +5,7 @@ import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
 import * as echarts from 'echarts';
-
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
@@ -410,13 +410,13 @@ const Developer: React.FC = () => {
             <BarChartOutlined className="mr-2" />
             可视化分析
           </Title>
-            <Card style={{height:'700px'}}>
+            {/* <Card style={{height:'700px'}}>
             <ReactECharts option={radarOption} />
             </Card>
             
             <ReactECharts option={pieOption} />
             <ReactECharts option={roseoption}/>
-            <ReactECharts option={columnaroption} />
+            <ReactECharts option={columnaroption} /> */}
             
             <ActivityGraph username='Vinci-217'/>
             <GitHubActivityGraph username='Vinci-217'/>
