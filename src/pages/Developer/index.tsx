@@ -171,7 +171,7 @@ const roseoption = {
     }
   ]
 };
-//柱状图数据(fork到时候是pr)
+//柱状图数据(pr)
 const columnaroption = {
   
   tooltip: {
