@@ -10,10 +10,6 @@ import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProduc
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
-import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
-import { useTheme } from '@/hooks/theme';
-import ReactECharts from 'echarts-for-react';
-import { getLineHeight } from 'antd/es/theme/internal';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -281,7 +277,7 @@ const columnaroption = {
 const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
-  const { isDarkMode } = useTheme();
+
   const fullText = "这里是抽屉的内容，具有打字机特效。";
   const navigate = useNavigate();
 
@@ -331,9 +327,12 @@ const Developer: React.FC = () => {
             排行
           </Button>
         </div>
- 
+        <div style={{lineHeight: '30px'}}>
+          <ThemeToggle></ThemeToggle>
+        </div>
+        
       </Header>
-      <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+      <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
 
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
