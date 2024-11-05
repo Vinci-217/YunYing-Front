@@ -65,3 +65,17 @@
   }
 }
 
+:root {
+  --background-color: #f0f2f5;
+  --text-color: #000;
+}
+
+.dark-mode {
+  --background-color: #1a1a1a;
+  --text-color: #fff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
