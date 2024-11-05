@@ -420,11 +420,11 @@ const Developer: React.FC = () => {
           
           
           <Card style={{ marginTop: '20px' }}>
-          <ActivityGraph username='Vinci-217'/>
+          <ActivityGraph username={personalInfo.name}/>
           </Card>
             
-            <GitHubActivityGraph username='Vinci-217'/>
-            <GitHubProductiveTime username='Vinci-217'/>
+            <GitHubActivityGraph username={personalInfo.name}/>
+            <GitHubProductiveTime username={personalInfo.name}/>
             
 
         </Card>
