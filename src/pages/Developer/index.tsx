@@ -10,6 +10,7 @@ import GitHubTopLangs from '@/components/GitHubTopLangs/GitHubTopLangs';
 import GitHubStreak from '@/components/GitHubStreak/GitHubStreak';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -110,6 +111,9 @@ const Developer: React.FC = () => {
             排行
           </Button>
         </div>
+        <div style={{lineHeight: '30px'}}>
+          <ThemeToggle></ThemeToggle>
+        </div>
         <Button 
           type="primary" 
           icon={<SunOutlined />} 
@@ -126,7 +130,7 @@ const Developer: React.FC = () => {
           换肤
         </Button>
       </Header>
-      <Layout style={{ background: '#f0f2f5', minHeight: '100vh', padding: '20px' }}>
+      <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
 
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>

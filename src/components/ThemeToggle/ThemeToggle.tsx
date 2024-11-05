@@ -31,14 +31,14 @@ const ThemeToggle: React.FC = () => {
           (<div className='dark-mode'>
             <div className='img'>
               <img src={logoIcons['darkMode']} 
-                style={{width: '100%', height: '100%', paddingTop: '5px'}}></img>
+                style={{width: '100%', height: '100%'}}></img>
             </div>
           </div>)
           : 
           (<div className='light-mode'>
             <div className='img'>
               <img src={logoIcons['lightMode']} 
-                style={{width: '100%', height: '100%', paddingTop: '5px'}}></img>
+                style={{width: '100%', height: '100%'}}></img>
             </div>
           </div>)
       }
