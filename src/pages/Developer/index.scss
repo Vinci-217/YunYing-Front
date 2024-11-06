@@ -63,11 +63,6 @@
   }
 }
 
-:root {
-  --background-color: #f0f2f5;
-  --text-color: #000;
-}
-
 .dark-mode {
   --background-color: #1a1a1a;
   --text-color: #fff;
@@ -79,6 +74,10 @@
 
 .card-with-shadow:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+.ant-card-head-title{
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
 body {
   
