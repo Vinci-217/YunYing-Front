@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer,Tabs  } from 'antd';
+import { ConfigProvider, Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer,Tabs  } from 'antd';
 import { GithubOutlined, BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
@@ -11,6 +11,7 @@ import ReactECharts from 'echarts-for-react';
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
+import { text } from 'stream/consumers';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -88,7 +89,6 @@ const radarOption = {
 
 //饼图数据(语言)
 const pieOption = {
- 
   tooltip: {
     trigger: 'item',
   },
@@ -318,20 +318,20 @@ const Developer: React.FC = () => {
 
         <Row gutter={[16, 16]}>
           <Col xs={24} md={6}>
-            <Card bordered={false} style={{ height: '100%' }}>
+            <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
               <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
                 <Avatar size={64} src={personalInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
-                <Text strong style={{ fontSize: '18px', textAlign: 'center' }}><UserOutlined /> {personalInfo.name}</Text>
-                <Text type="secondary" style={{ textAlign: 'center' }}>{personalInfo.bio}</Text>
+                <Text strong style={{ fontSize: '18px', textAlign: 'center', color: 'var(--text-color)', transition: 'color 0.3s ease' }}><UserOutlined /> {personalInfo.name}</Text>
+                <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{personalInfo.bio}</Text>
                 <Row justify="center" style={{ width: '100%' }}>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text><MailOutlined /> {personalInfo.email}</Text>
+                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {personalInfo.email}</Text>
                   </Col>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={personalInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
                   </Col>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text className="flex items-center">
+                    <Text className="flex items-center" style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}>
                       <GlobalOutlined className="mr-1" /> 国籍：
                       <span className="flex items-center">
                         <img src="/static/media/China.8214ce135867ed3a09cf923c95048840.svg" alt="中国国旗" style={{
@@ -346,13 +346,13 @@ const Developer: React.FC = () => {
                     </Text>
                   </Col>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
+                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{personalInfo.followers} | <TeamOutlined /> 关注：{personalInfo.following}</Text>
                   </Col>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
+                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{personalInfo.talentRank}</Text>
                   </Col>
                   <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
+                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{personalInfo.skills.join(', ')}</Text>
                   </Col>
                 </Row>
               </Space>
@@ -363,8 +363,8 @@ const Developer: React.FC = () => {
           <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
             <Row gutter={[16, 16]} style={{ flex: 1 }}>
               <Col span={24}>
-                <Card bordered={false} style={{ height: '100%' }}>
-                  <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px' }}>
+                <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
+                  <Title level={3} style={{ marginBottom: '10px', marginTop: '-5px', color: 'var(--text-color)', transition: 'color 0.3s ease' }}>
                     <CodeOutlined /> 项目展示
                   </Title>
                   <div style={{ maxHeight: '300px', overflowY: 'hidden', padding: '8px' }}>
@@ -388,45 +388,50 @@ const Developer: React.FC = () => {
           </Col>
         </Row>
 
-        <Card bordered={false} style={{ marginTop: '20px' }}>
-          <Title className="text-2xl font-semibold mb-4 flex items-center">
+        <Card bordered={false} style={{ marginTop: '20px', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
+          <Title style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}} className="text-2xl font-semibold mb-4 flex items-center">
             <BarChartOutlined className="mr-2" />
             可视化分析
           </Title>
             
-         
+          <ConfigProvider 
+            theme={{
+              components: {
+                Tabs: {
+                  cardBg: 'var(--card-color)',
+                  itemColor: 'var(--text-color)'
+                }
+              }
+            }}>
             <Tabs defaultActiveKey="1" type="card">
               <TabPane tab="Commits统计" key="1">
-                <Card title="各项目的Commits">
-                  <ReactECharts option={radarOption} />
+                <Card title="各项目的Commits" style={{ backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
+                  <ReactECharts option={radarOption}/>
                 </Card>
               </TabPane>
               <TabPane tab="language统计" key="2">
-                <Card title="项目所用语言占比">
+                <Card title="项目所用语言占比" style={{ backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
                   <ReactECharts option={pieOption} />
                 </Card>
               </TabPane>
               <TabPane tab="Starts统计" key="3">
-                <Card title="各项目的Starts占比">
+                <Card title="各项目的Starts占比" style={{ backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
                   <ReactECharts option={roseoption} />
                 </Card>
               </TabPane>
               <TabPane tab="pr统计" key="4">
-                <Card title="各项目的pr统计">
+                <Card title="各项目的pr统计" style={{ backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
                   <ReactECharts option={columnaroption} />
                 </Card>
               </TabPane>
             </Tabs>
+          </ConfigProvider>
           
-          
-          <Card style={{ marginTop: '20px' }}>
-          <ActivityGraph username={personalInfo.name}/>
-          </Card>
-            
+          <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
+            <ActivityGraph username={personalInfo.name}/>
             <GitHubActivityGraph username={personalInfo.name}/>
             <GitHubProductiveTime username={personalInfo.name}/>
-            
-
+          </Card>
         </Card>
 
         {/* 抽屉组件 */}
