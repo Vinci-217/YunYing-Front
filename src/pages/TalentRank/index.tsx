@@ -1,7 +1,7 @@
 // 开发者排名页面
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Select, theme } from 'antd';
+import { Select, Spin } from 'antd';
 import './index.scss'
 import Logo from '@/components/Logo/Logo';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
@@ -29,18 +29,9 @@ import AnimationBronzeMedal from '@/assets/lottie-animation/animation-bronze-med
 
 // 导入自定义组件
 import DeveloperCard from '@/components/DeveloperCard/DeveloperCard';
+import { current } from '@reduxjs/toolkit';
 
 const { Option } = Select;
-
-interface Developer1 {
-  rank?: number;
-  avatar?: string;
-  name?: string;
-  followers?: number;
-  rate?: number;
-  grade?: string;
-  repo?: number;
-}
 
 const TalentRank: React.FC = () => {
   const {isDarkMode} = useTheme();
@@ -48,108 +39,77 @@ const TalentRank: React.FC = () => {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // 存储上一次滚动位置
+  const previousScrollTop = useRef<number>(0);
+
   // 开发者列表
-  const [developers, setDevelopers] = useState<Developer1[]>([
-    {
-      rank: 1,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '鱿鱼洗',
-      followers:100000,
-      rate: 5,
-      grade: 's',
-      repo: 1000,
-    },
-    {
-      rank: 2,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '卡松哇',
-      followers:100,
-      rate: 4.5,
-      grade: 's',
-      repo: 1000,
-    },
-    {
-      rank: 3,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '卡松',
-      followers:900,
-      rate: 4,
-      grade:'s',
-      repo: 1000,
-    },
-    {
-      rank: 4,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '卡松哥哥',
-      followers:900,
-      rate: 3.5,
-      grade:'a',
-      repo: 1000,
-    },
-    {
-      rank: 5,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '鱿鱼洗净',
-      followers:900,
-      rate: 3,
-      grade:'a',
-      repo: 1000,
-    },
-    {
-      rank: 6,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '尤雨溪',
-      followers:900,
-      rate: 2.5,
-      grade:'b',
-      repo: 1000,
-    },
-    {
-      rank: 7,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '尤雨溪大佬',
-      followers:900,
-      rate: 1.5,
-      grade:'c',
-      repo: 1000,
-    },
-    {
-      rank: 8,
-      avatar: 'https://avatars.githubusercontent.com/u/10245193?s=200&v=4',
-      name: '卡颂大佬',
-      followers:900,
-      rate: 1,
-      grade:'d',
-      repo: 1000,
-    },
-  ]);
+  const [developers, setDevelopers] = useState<Developer[]>([]);
 
   // 分页参数（页码）
-  const page: number = 1;
+  const page = useRef<number>(1)
 
   // 分页参数（数量）
-  const pageSize: number = 20;
+  const pageSize = useRef<number>(20)
 
-  const [test, setTest] = useState<Developer[]>([])
+  // 开发者列表是否加载中(控制显示加载小图标)
+  const [developerLoading, setDeveloperLoading] = useState(false);
+  // 是否允许加载（避免频繁调用接口）
+  const allowFetchMoreDevelopers = useRef<boolean>(true);
+  // 开发者列表骨架屏显示
+  const [developerSkeleton, setDeveloperSkeleton] = useState(true);
 
   // 获取开发者列表
   const fetchMoreDevelopers = async () => {
     console.log('获取数据');  
     try {
-      const result: Result<Developer[]>  = await getDeveloperList(field, nation, page, pageSize);
+      const result: Result<Developer[]>  = await getDeveloperList(field.current, nation.current, page.current, pageSize.current);
       console.log('开发者', result);
-      // setDevelopers(prevDevelopers => [...prevDevelopers,...result.data]);
+      page.current +=1;
+      setDevelopers(prevDevelopers => [...prevDevelopers,...result.data]);
     } catch (err) {
       console.error(err);
+    } finally{
+      setDeveloperLoading(false);
+      allowFetchMoreDevelopers.current = true;
+      setDeveloperSkeleton(false);
     }
   };
 
-  // 检测是否滚动到右边界
+  // 检测是否滚动到了底部
   const handleScroll = () => {
-    if (!containerRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
-    if (scrollWidth - scrollLeft <= clientWidth + 5) { // 接近右边界时加载
+    const container = containerRef.current;
+    if (!container) return;
+
+    // 当前滚动位置
+    const currentScrollTop = container.scrollTop;
+
+    // 判断是否滚动方向是向下
+    if (currentScrollTop <= previousScrollTop.current) {
+      // 更新上一次滚动位置
+      previousScrollTop.current = currentScrollTop;
+      // 如果是向上滚动，直接返回
+      return;
+    }
+
+    // 更新上一次滚动位置
+    previousScrollTop.current = currentScrollTop;
+
+    console.log('滚动', allowFetchMoreDevelopers.current);
+    if(!allowFetchMoreDevelopers.current) return;
+    if (container) {
+      console.log('scrollHeight', container.scrollHeight);
+      console.log('scrollTop', container.scrollTop);
+      console.log('clientHeight', container.clientHeight);
+      
+      const isBottom = container.scrollHeight - container.scrollTop < container.clientHeight+50;
+      if (isBottom) {
+        // 滚动到底部，加载数据
+        console.log('到底部了');
+        allowFetchMoreDevelopers.current = false;
+        setDeveloperLoading(true);
+        // setTimeout(fetchMoreDevelopers, 800);
         fetchMoreDevelopers();
+      }
     }
   };
 
@@ -193,20 +153,30 @@ const TalentRank: React.FC = () => {
   const countries = ['China', 'USA', 'UK', 'Germany'];
 
   // 筛选条件（领域）
-  const [field, setField] = useState<string>('');
+  const field = useRef<string>('');
 
   // 筛选条件（国家）
-  const [nation, setNation] = useState<string>('');
+  const nation = useRef<string>('');
 
   // 选择器的事件处理函数
   const handleFieldChange = (value: string) => {
     console.log('Selected field:', value);
     // 处理筛选逻辑
+    field.current = value;
+    page.current = 1;
+    allowFetchMoreDevelopers.current = false
+    // setDeveloperSkeleton(true);
+    fetchMoreDevelopers();
   };
 
   const handleNationChange = (value: string) => {
     console.log('Selected country:', value);
     // 处理筛选逻辑
+    nation.current = value;
+    page.current = 1;
+    allowFetchMoreDevelopers.current = false
+    // setDeveloperSkeleton(true);
+    fetchMoreDevelopers();
   };
 
   return (
@@ -286,45 +256,95 @@ const TalentRank: React.FC = () => {
         <div className='top'>
           <div className='rank2 rank'>
             <LottieAnimation className='silver-coin' animationData={AnimationSilverCoin} width='200px'></LottieAnimation>
-            <div className='avatar'>
-              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-            </div>
-            <div className='name'>{developers[1].name}</div>
+            {/* top3开发者rank2骨架屏 */}
+            {developerSkeleton?(
+              <div className='avatar-skeleton skeleton-ani'></div>
+            ):(
+              <div className='avatar'>
+                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+                </div>
+            )}
+            {developerSkeleton?(
+              <div className='name-skeleton skeleton-ani'></div>
+            ):(
+              <div className='name'>{developers[0].dev_login}</div>
+            )}
             <LottieAnimation className='silver-medal' animationData={AnimationSilverMedal} width='120px'></LottieAnimation>
           </div>
           <div className='rank1 rank'>
             <LottieAnimation className='crown' animationData={AnimationCrown} width='200px'></LottieAnimation>
-            <div className='avatar'>
-              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-            </div>
-            <div className='name'>{developers[0].name}</div>
+            {/* top3开发者rank1骨架屏 */}
+            {developerSkeleton?(
+              <div className='avatar-skeleton skeleton-ani'></div>
+            ):(
+              <div className='avatar'>
+                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+                </div>
+            )}
+            {developerSkeleton?(
+              <div className='name-skeleton skeleton-ani'></div>
+            ):(
+              <div className='name'>{developers[0].dev_login}</div>
+            )}
             <LottieAnimation className='gold-medal' animationData={AnimationGoldMedal} width='140px'></LottieAnimation>
             <LottieAnimation className='congratulation' animationData={AnimationCongratulation} width='250px' height='350px'></LottieAnimation>
           </div>
           <div className='rank3 rank'>
             <LottieAnimation className='bronze-coin' animationData={AnimationBronzeCoin} width='200px'></LottieAnimation>
-            <div className='avatar'>
-              <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
-            </div>
-            <div className='name'>{developers[2].name}</div>
+            {/* top3开发者rank3骨架屏 */}
+            {developerSkeleton?(
+              <div className='avatar-skeleton skeleton-ani'></div>
+            ):(
+              <div className='avatar'>
+                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+                </div>
+            )}
+            {developerSkeleton?(
+              <div className='name-skeleton skeleton-ani'></div>
+            ):(
+              <div className='name'>{developers[0].dev_login}</div>
+            )}
             <LottieAnimation className='bronze-medal' animationData={AnimationBronzeMedal} width='120px'></LottieAnimation>
           </div>
-          {/* <LottieAnimation animationData={AnimationCrown} width='20%'/> */}
         </div>
         <div className='ranking-title'>
         <div className='ranking-logo'>
           <Logo darkLogo={logoIcons['rankingDark']} lightLogo={logoIcons['rankingLight']}></Logo>
         </div>
         <div className='text'>开发者能力排行榜</div>
-      </div>
+        </div>
         {/* 开发者rank */}
         <div className='bottom'>
-          <div className='grid'>
-            {developers.map((dev, index) => (
-              <DeveloperCard key={index} className='developer' {...dev} />
-            ))}
-          </div>
+          {/* 开发者卡片列表骨架屏 */}
+          {developerSkeleton?(
+            <div className='grid'>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+              <div className='developer-skeleton skeleton-ani'></div>
+            </div>
+          ):(
+            <div className='grid'>
+              {
+                developers.map((dev, index) => (
+                  <DeveloperCard key={index} className='developer' rank={index+1} {...dev} />
+                ))
+              }
+            </div>
+          )}
         </div>
+        {/* 加载动画 */}
+        {developerLoading && (
+          <div className='loading-icon'><Spin size="large" /></div>
+        )}
       </div>
     </div>
   );

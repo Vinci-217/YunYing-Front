@@ -11,7 +11,7 @@ export class Request {
   // axios 实例
   instance: AxiosInstance;
   // 基础配置，url和超时时间
-  baseConfig: AxiosRequestConfig = { baseURL: "http://192.168.43.32:4523/m1/5316142-4986155-default", timeout: 60000 };
+  baseConfig: AxiosRequestConfig = { baseURL: "http://192.168.0.102:4523/m1/5316142-4986155-default", timeout: 60000 };
 
   constructor(config: AxiosRequestConfig) {
     // 使用axios.create创建axios实例
