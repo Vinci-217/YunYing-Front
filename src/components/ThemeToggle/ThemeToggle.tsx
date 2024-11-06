@@ -9,6 +9,7 @@ const ThemeToggle: React.FC = () => {
     return localStorage.getItem('theme') === 'dark';
   });
 
+
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {
@@ -22,6 +23,7 @@ const ThemeToggle: React.FC = () => {
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+      
   };
 
   return (
