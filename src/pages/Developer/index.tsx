@@ -11,6 +11,7 @@ import ReactECharts from 'echarts-for-react';
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
 import { text } from 'stream/consumers';
+import { useTheme } from '@/hooks/theme';
 
 
 const { Text, Title } = Typography;
@@ -257,34 +258,32 @@ const columnaroption = {
 
 
 const Developer: React.FC = () => {
+  const {isDarkMode} = useTheme();
+
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
 
   const fullText = "这里是抽屉的内容，具有打字机特效。";
         
   const navigate = useNavigate();
-   // 主题状态：包括 ActivityGraph, GitHubActivityGraph, GitHubProductiveTime 各自的主题
-   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
-  });
 
-  const [activityGraphTheme, setActivityGraphTheme] = useState('minimal');
-  const [githubActivityGraphTheme, setGitHubActivityGraphTheme] = useState('default');
-  const [githubProductiveTimeTheme, setGitHubProductiveTimeTheme] = useState('default');
+  // const [activityGraphTheme, setActivityGraphTheme] = useState('minimal');
+  // const [githubActivityGraphTheme, setGitHubActivityGraphTheme] = useState('default');
+  // const [githubProductiveTimeTheme, setGitHubProductiveTimeTheme] = useState('default');
 
-  // 切换主题的函数
-  const toggleTheme = () => {
-    setIsDarkMode((prev) => !prev);
+  // // 切换主题的函数
+  // const toggleTheme = () => {
+  //   setIsDarkMode((prev) => !prev);
 
-    // 切换 ActivityGraph 主题
-    setActivityGraphTheme((prev) => (prev === 'minimal' ? 'react' : 'minimal'));
+  //   // 切换 ActivityGraph 主题
+  //   setActivityGraphTheme((prev) => (prev === 'minimal' ? 'react' : 'minimal'));
 
-    // 切换 GitHubActivityGraph 主题
-    setGitHubActivityGraphTheme((prev) => (prev === 'default' ? 'nord_dark' : 'default'));
+  //   // 切换 GitHubActivityGraph 主题
+  //   setGitHubActivityGraphTheme((prev) => (prev === 'default' ? 'nord_dark' : 'default'));
 
-    // 切换 GitHubProductiveTime 主题
-    setGitHubProductiveTimeTheme((prev) => (prev === 'default' ? 'nord_dark' : 'default'));
-  };
+  //   // 切换 GitHubProductiveTime 主题
+  //   setGitHubProductiveTimeTheme((prev) => (prev === 'default' ? 'nord_dark' : 'default'));
+  // };
   const showDrawer = () => {
     setDrawerVisible(true);
     setDisplayedText(''); // 重置显示文本
@@ -333,7 +332,7 @@ const Developer: React.FC = () => {
         </div>
 
         <div style={{ lineHeight: '30px' }}>
-        <ThemeToggle toggleTheme={toggleTheme}/>
+        <ThemeToggle/>
       </div>
         
       </Header>
@@ -451,9 +450,9 @@ const Developer: React.FC = () => {
           </ConfigProvider>
           
           <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-          <ActivityGraph username={personalInfo.name} theme={activityGraphTheme || 'minimal'} />
-        <GitHubActivityGraph username={personalInfo.name} theme={githubActivityGraphTheme || 'default'} />
-        <GitHubProductiveTime username={personalInfo.name} theme={githubProductiveTimeTheme || 'default'} />
+          <ActivityGraph username={personalInfo.name} theme={isDarkMode?'react':'minimal'} />
+          <GitHubActivityGraph username={personalInfo.name} theme={isDarkMode?'nord_dark':'default'} />
+          <GitHubProductiveTime username={personalInfo.name} theme={isDarkMode?'nord_dark':'default'} />
           </Card>
         </Card>
 
