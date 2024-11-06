@@ -2,10 +2,11 @@ import React from 'react';
 
 interface GitHubActivityGraphProps {
   username: string;
+  theme?: string; 
 }
 
-const GitHubActivityGraph: React.FC<GitHubActivityGraphProps> = ({ username }) => {
-  const imageUrl = `http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=${username}&theme=default`;
+const GitHubActivityGraph: React.FC<GitHubActivityGraphProps> = ({ username,theme ='default' }) => {
+  const imageUrl = `http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=${username}&theme=${theme}`;
 
   return (
     <div style={{ textAlign: 'center', margin: '20px 0' }}>

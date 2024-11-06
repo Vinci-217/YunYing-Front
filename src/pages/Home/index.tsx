@@ -7,15 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from 'antd';
 import type { GetProps } from 'antd';
 import { useTheme } from '@/hooks/theme';
+import { queryDeveloper, insertDeveloper } from '@/api/path/home';
 // 导入lottie动画
 import LottieAnimation from '@/components/LottieAnimation/LottieAnimation';
 import AnimationGithub from '@/assets/lottie-animation/animation-github.json';
+import { message } from 'antd';
 
 type SearchProps = GetProps<typeof Input.Search>;
 
 const { Search } = Input;
-
-const onSearch: SearchProps['onSearch'] = (value, _e, info) => console.log(info?.source, value);
 
 const Home: React.FC = () => {
   const {isDarkMode} = useTheme();
@@ -24,6 +24,39 @@ const Home: React.FC = () => {
   const [mode, setMode] = useState<number>(0);
 
   const navigate = useNavigate();
+
+  // 查询开发者
+  const queryDeveloperByLogin = async (login: string) => {
+    try{
+      const res = await queryDeveloper(login);
+      console.log(res);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  // 添加开发者
+  const insertDeveloperByLogin = async (login: string) => {
+    try{
+      const res = await insertDeveloper({login});
+      console.log(res);
+    }catch(e){
+      console.log(e);
+    }
+  }
+
+  const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
+    if(value === ''){
+      message.warning('开发者login不能为空哦～');
+      return;
+    }
+    console.log(value);
+    if(mode ===1){
+      queryDeveloperByLogin(value);
+    }else{
+      insertDeveloperByLogin(value);
+    }
+  };
 
   return (
     <div className='home-layout'>
@@ -58,7 +91,7 @@ const Home: React.FC = () => {
             <div className='introduction'>
               <p>
                 这是由云影1024团队开发的一款基于 GitHub 开源项目数据的开发者评估应用<br/>
-                您可以选择通过输入 GitHub 用户名来查看该开发者的能力评估报告<br/>
+                您可以选择通过输入 GitHub Login 来查看该开发者的能力评估报告<br/>
                 也可以选择添加您想评估的开发者，我们的算法将快速为您生成评估报告<br/>
                 您还可以浏览不同国家不同领域的开发者能力排行榜<br/>
                 我们将持续为您提供更全面的开发者能力评估服务，期待您的使用！
@@ -81,12 +114,12 @@ const Home: React.FC = () => {
             </div>
             <div className='introduction'>
               <p>
-                在下方输入框输入您要查看的开发者ID<br/>
+                在下方输入框输入您要查看的开发者login<br/>
                 您将获取到该开发者的能力评估报告
               </p>
             </div>
             <div className='search-wrapper'>
-              <Search className='search' placeholder="请输入开发者ID" onSearch={onSearch} enterButton 
+              <Search className='search' placeholder="请输入开发者login" onSearch={onSearch} enterButton 
               size="large"/>
             </div>
             <div className='btns'>
@@ -106,12 +139,12 @@ const Home: React.FC = () => {
             </div>
             <div className='introduction'>
               <p>
-                在下方输入框输入您要查看的开发者ID<br/>
+                在下方输入框输入您要查看的开发者login<br/>
                 我们的算法将为您生成开发者能力评估报告
               </p>
             </div>
             <div className='search-wrapper'>
-              <Search className='search' placeholder="请输入开发者ID" onSearch={onSearch} enterButton 
+              <Search className='search' placeholder="请输入开发者login" onSearch={onSearch} enterButton 
               size="large"/>
             </div>
             <div className='btns'>

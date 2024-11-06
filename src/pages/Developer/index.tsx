@@ -232,7 +232,7 @@ const columnaroption = {
           itemStyle: {
             // 动态颜色设置
             color: (function() {
-              const colorList = ['#FFB74D', '#FF7043', '#42a5f5', '#333', '#4caf50']; // 这里你可以自己设置颜色
+              const colorList = ['#FFB74D', '#FF7043', '#42a5f5', '#333', '#4caf50']; 
               return colorList[index % colorList.length]; // 根据索引循环使用颜色
             })()
           }
@@ -261,8 +261,9 @@ const Developer: React.FC = () => {
   const [displayedText, setDisplayedText] = useState('');
 
   const fullText = "这里是抽屉的内容，具有打字机特效。";
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
+  
   const showDrawer = () => {
     setDrawerVisible(true);
     setDisplayedText(''); // 重置显示文本
@@ -309,9 +310,12 @@ const Developer: React.FC = () => {
             排行
           </Button>
         </div>
-        <div style={{lineHeight: '30px'}}>
-          <ThemeToggle></ThemeToggle>
-        </div>
+        {/* <div style={{lineHeight: '30px'}}>
+          <ThemeToggle/>
+        </div> */}
+        <div style={{ lineHeight: '30px' }}>
+        <ThemeToggle />
+      </div>
         
       </Header>
       <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
@@ -428,9 +432,9 @@ const Developer: React.FC = () => {
           </ConfigProvider>
           
           <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-            <ActivityGraph username={personalInfo.name}/>
-            <GitHubActivityGraph username={personalInfo.name}/>
-            <GitHubProductiveTime username={personalInfo.name}/>
+            <ActivityGraph username={personalInfo.name} theme='react'/>
+            <GitHubActivityGraph username={personalInfo.name} theme='nord_dark'/>
+            <GitHubProductiveTime username={personalInfo.name} theme='nord_dark'/>
           </Card>
         </Card>
 

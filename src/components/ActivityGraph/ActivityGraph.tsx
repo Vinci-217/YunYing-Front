@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ActivityGraphProps {
   username: string;
-  theme?: string; // 可选的主题参数
+  theme?: string; 
 }
 
 const ActivityGraph: React.FC<ActivityGraphProps> = ({ username, theme = 'minimal' }) => {

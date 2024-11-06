@@ -29,7 +29,7 @@ import AnimationBronzeMedal from '@/assets/lottie-animation/animation-bronze-med
 
 // 导入自定义组件
 import DeveloperCard from '@/components/DeveloperCard/DeveloperCard';
-import { current } from '@reduxjs/toolkit';
+import { log } from 'console';
 
 const { Option } = Select;
 
@@ -75,6 +75,45 @@ const TalentRank: React.FC = () => {
     }
   };
 
+  // // 开发者列表自动滚动到底部
+  // const scrollToBottom = () => {
+  //   if (containerRef.current) {
+  //     containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   if(developerLoading) scrollToBottom();
+  // }, [developerLoading])
+
+  // 实现一个节流函数，避免滚动触底刷新多次调用接口
+  // 想要使用react钩子函数，外面的函数名首字母必须大写
+  function Throttle(func: Function, delay: number, effectFunc?: Function){
+    // let lastTime = 0; react中不能这样用
+    const lastTimeRef = useRef<number>(0);
+
+    return function(){
+      console.log('lastTime', lastTimeRef.current);
+      
+      console.log('节流时间', Date.now() - lastTimeRef.current);
+      
+      if(Date.now() - lastTimeRef.current > delay){
+        func();
+        console.log('给lastTime赋值');
+        
+        lastTimeRef.current = Date.now();
+      }else{
+        effectFunc && effectFunc();
+      }
+    }
+  }
+
+  const scrollThrottle = Throttle(fetchMoreDevelopers, 500, ()=>{
+    setDeveloperLoading(false);
+    allowFetchMoreDevelopers.current = true;
+    setDeveloperSkeleton(false);
+  })
+
   // 检测是否滚动到了底部
   const handleScroll = () => {
     const container = containerRef.current;
@@ -108,7 +147,8 @@ const TalentRank: React.FC = () => {
         allowFetchMoreDevelopers.current = false;
         setDeveloperLoading(true);
         // setTimeout(fetchMoreDevelopers, 800);
-        fetchMoreDevelopers();
+        // fetchMoreDevelopers();
+        scrollThrottle();
       }
     }
   };
@@ -342,9 +382,8 @@ const TalentRank: React.FC = () => {
           )}
         </div>
         {/* 加载动画 */}
-        {developerLoading && (
-          <div className='loading-icon'><Spin size="large" /></div>
-        )}
+        <div className='loading-icon'>
+          {developerLoading&&(<Spin size="large" />)}</div>
       </div>
     </div>
   );
