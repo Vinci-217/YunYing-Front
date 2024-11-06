@@ -133,6 +133,25 @@ html {
           position: absolute;
           top: -20px;
         }
+        .avatar-skeleton{
+          position: absolute;
+          width: 150px;
+          min-width: 100px;
+          height: 150px;
+          border-radius: 50%;
+          top: 130px;
+          box-shadow: var(--top3-box-shadow);
+          transition: box-shadow 0.3s ease; /* 阴影过渡 */;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        .name-skeleton{
+          position: absolute;
+          width: 120px;
+          height: 25px;
+          border-radius: 10px;
+          top: 295px;
+        }
         .avatar{
           position: absolute;
           width: 150px;
@@ -172,6 +191,25 @@ html {
         .crown{
           position: absolute;
           top: -30px;
+        }
+        .avatar-skeleton{
+          position: absolute;
+          width: 170px;
+          min-width: 100px;
+          height: 170px;    /* 宽高比为 1:1 */
+          border-radius: 50%;
+          top: 120px;
+          box-shadow: var(--top3-box-shadow);
+          transition: box-shadow 0.3s ease; /* 阴影过渡 */;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        .name-skeleton{
+          position: absolute;
+          width: 120px;
+          height: 25px;
+          border-radius: 10px;
+          top: 310px;
         }
         .avatar{
           position: absolute;
@@ -216,6 +254,25 @@ html {
         .bronze-coin{
           position: absolute;
           top: -20px;
+        }
+        .avatar-skeleton{
+          position: absolute;
+          width: 150px;
+          min-width: 100px;
+          height: 150px;
+          border-radius: 50%;
+          top: 130px;
+          box-shadow: var(--top3-box-shadow);
+          transition: box-shadow 0.3s ease; /* 阴影过渡 */;
+          overflow: hidden;
+          cursor: pointer;
+        }
+        .name-skeleton{
+          position: absolute;
+          width: 120px;
+          height: 25px;
+          border-radius: 10px;
+          top: 295px;
         }
         .avatar{
           position: absolute;
@@ -280,10 +337,30 @@ html {
         grid-template-columns: repeat(auto-fill, 200px); /* 每个卡片200px，最大自动填充 */
         justify-content: space-between;
         grid-gap: 15px 20px;
+        .developer-skeleton{
+          margin-bottom: 10px;
+          width: 200px;
+          height: 300px;
+          border-radius: 20px;
+          position: relative;
+          padding-top: 15px;
+          box-shadow: var(--card-border-box-shadow); /* 默认阴影 */
+          transition: box-shadow 0.3s ease, background 0.3s ease; /* 阴影过渡效果 */
+          cursor: pointer; /* 鼠标悬停时变成手形 */
+          &:hover {
+            box-shadow: var(--card-border-hover-box-shadow); /* 悬停时扩大阴影 */
+          }
+        }
         .developer{
           margin-top: 10px;
         }
       }
+    }
+    .loading-icon{
+      padding-top: 20px;
+      height: 50px;
+      display: flex;
+      justify-content: center;
     }
   }
 }

@@ -17,6 +17,10 @@ export const getNationList = async (): Promise<Result<string[]>> => {
 
 // 分页获取开发者列表
 export const getDeveloperList = async (field: string,nation: string, page: number, pageSize: number): Promise<Result<Developer[]>> => {
+  console.log('field', field);
+  console.log('nation', nation);
+  console.log('page', page);
+  console.log('pageSize', pageSize);
   const response = await Request.get<Developer[]>('/developer/select/fieldAndNation?page='+page+'&pageSize='+pageSize+`${field === ''?'':'&field='+field}`+`${nation === ''?'':'&nation='+nation}`);
   return response.data; // 只返回 response.data 部分
 }
