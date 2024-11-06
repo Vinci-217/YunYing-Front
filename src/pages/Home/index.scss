@@ -35,7 +35,7 @@
             position: absolute;
             right: 0;
             top: -120px;
-            animation: fadeInUp 3s ease forwards;
+            animation: fadeInUp 2s ease forwards;
             z-index: 99;
           }
           .speech-bubble{
@@ -46,7 +46,7 @@
             background-size: cover;
             left: 100px;
             top: -200px;
-            animation: bubbleShow 3.5s ease;
+            animation: bubbleShow 2.5s ease;
             .speech-content{
               position: absolute;
               top: 0;
