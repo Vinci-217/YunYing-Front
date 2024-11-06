@@ -4,6 +4,7 @@ import { GithubOutlined, LoadingOutlined,BarChartOutlined, SunOutlined, OpenAIOu
 import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
+import DeveloperCharts from '@/components/DeveloperCharts/DeveloperCharts';
 import * as echarts from 'echarts';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
@@ -60,7 +61,7 @@ const Developer: React.FC = () => {
       console.error('获取项目列表失败:', error);
     }
   };
- //请求项目语言数据
+
 
 
   // 显示抽屉并启动打字机效果
@@ -195,7 +196,24 @@ if (!developerInfo || !projects.length) {
             </Row>
           </Col>
         </Row>
-      </Layout>
+        <ConfigProvider 
+            theme={{
+              components: {
+                Tabs: {
+                  cardBg: 'var(--card-color)',
+                  itemColor: 'var(--text-color)'
+                }
+              }
+            }}>
+        <DeveloperCharts/>
+        </ConfigProvider>
+        <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
+          <ActivityGraph username={developerInfo.name} theme={isDarkMode?'react':'minimal'} />
+          <GitHubActivityGraph username={developerInfo.name} theme={isDarkMode?'nord_dark':'default'} />
+          <GitHubProductiveTime username={developerInfo.name} theme={isDarkMode?'nord_dark':'default'} />
+          </Card>
+        
+
       
       {/* 抽屉显示AI报告 */}
       <Drawer
@@ -209,6 +227,7 @@ if (!developerInfo || !projects.length) {
           <Text>{aiReport}</Text>
         </div>
       </Drawer>
+    </Layout>
     </Layout>
   );
 };
