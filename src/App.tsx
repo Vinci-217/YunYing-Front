@@ -12,7 +12,7 @@ const App: React.FC = () => {
             token: { 
               colorPrimary: '#1677ff' ,
               borderRadius: 8,
-            } 
+            }
           }}>
           <AppRouter />
         </ConfigProvider>
