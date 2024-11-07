@@ -9,6 +9,17 @@
     width: 0px;
   }
 
+  .loading{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    background-color: rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .title{
     display: flex;
     justify-content: space-between;
@@ -21,6 +32,8 @@
     }
   }
   .content{
+    // 不加这个relative会导致整个页面的高度发生变化
+    position: relative;
     .mode0{
       padding-top: 200px;
       animation: show 2s ease;
@@ -245,6 +258,29 @@
       }
       to{
         opacity: 1;
+      }
+    }
+    .mode3{
+      width: 100vw;
+      height: 90vh;
+      position: absolute;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      .animation-wrapper{
+        width: 500px;
+        .ani{
+          margin-left: 100px;
+        }
+        .text{
+          text-align: center;
+          color: var(--text-color);
+          transition: color 0.3s ease;
+          font-weight: bold;
+          font-size: 18px;
+        }
       }
     }
   }
