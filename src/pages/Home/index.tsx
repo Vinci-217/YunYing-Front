@@ -1,16 +1,19 @@
 import './index.scss';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Logo from '@/components/Logo/Logo';
 import logoIcons from '@/assets/logo';
 import { useNavigate } from 'react-router-dom';
-import { Input } from 'antd';
+import { Input, Spin } from 'antd';
 import type { GetProps } from 'antd';
 import { useTheme } from '@/hooks/theme';
 import { queryDeveloper, insertDeveloper } from '@/api/path/home';
 // 导入lottie动画
 import LottieAnimation from '@/components/LottieAnimation/LottieAnimation';
 import AnimationGithub from '@/assets/lottie-animation/animation-github.json';
+import AnimationHomeInsert0 from '@/assets/lottie-animation/animation-home-insert0.json';
+import AnimationHomeInsert1 from '@/assets/lottie-animation/animation-home-insert1.json';
+
 import { message } from 'antd';
 
 type SearchProps = GetProps<typeof Input.Search>;
@@ -20,30 +23,54 @@ const { Search } = Input;
 const Home: React.FC = () => {
   const {isDarkMode} = useTheme();
 
-  // 模式：0-介绍页面 1-搜索开发者 2-添加开发者
+  // 模式：0-介绍页面 1-搜索开发者 2-添加开发者 3-添加开发者加载动画
   const [mode, setMode] = useState<number>(0);
 
   const navigate = useNavigate();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  // 添加开发者接口等待动画切换
+  const [animationIdx, setAnimationIdx] = useState<number>(0);
   // 查询开发者
   const queryDeveloperByLogin = async (login: string) => {
-    try{
-      const res = await queryDeveloper(login);
-      console.log(res);
-    }catch(e){
-      console.log(e);
-    }
+    // try{
+    //   // const res = await queryDeveloper(login);
+    //   // console.log(res);
+    // }catch(e){
+    //   console.log(e);
+    // }
+
+    setTimeout(()=>{
+      try{
+        // const res = await insertDeveloper({login});
+        // console.log(res);
+      }catch(e){
+        console.log(e);
+      }finally{
+        setIsLoading(false);
+      }
+    }, 10000)
   }
 
   // 添加开发者
   const insertDeveloperByLogin = async (login: string) => {
     try{
-      const res = await insertDeveloper({login});
-      console.log(res);
+      setMode(3);
+      let interval = setInterval(()=>{
+        // setAnimationIdx((animationIdx+1)%2); 这样更新不行！
+        setAnimationIdx((prevIdx) => (prevIdx + 1) % 2); // 使用函数式更新
+      }, 2000);
+      // const res = await insertDeveloper({login});
+      // console.log(res);
     }catch(e){
       console.log(e);
     }
   }
+  useEffect(()=>{
+    console.log(animationIdx);
+    
+  }, [animationIdx])
 
   const onSearch: SearchProps['onSearch'] = (value, _e, info) => {
     if(value === ''){
@@ -52,6 +79,7 @@ const Home: React.FC = () => {
     }
     console.log(value);
     if(mode ===1){
+      setIsLoading(true);
       queryDeveloperByLogin(value);
     }else{
       insertDeveloperByLogin(value);
@@ -60,6 +88,14 @@ const Home: React.FC = () => {
 
   return (
     <div className='home-layout'>
+
+      {/* 加载动画（查询开发者） */}
+      {isLoading && (
+        <div className='loading'>
+          <Spin size="large">
+          </Spin>
+        </div>
+      )}
       <div className='title'>
         <div className='left'></div>
         <div className='right'>
@@ -131,7 +167,7 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
-        ):(
+        ): mode === 2 ?(
           // 添加开发者
           <div className='mode2' key='mode2'>
             <div className='title'>
@@ -156,7 +192,24 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+        ):(
+          <div className='mode3' key='mode3'>
+            {
+              animationIdx === 0?(
+                <div className='animation-wrapper'>
+                  <LottieAnimation animationData={AnimationHomeInsert0} width='300px' className='ani'></LottieAnimation>
+                  <div className='text'>我们的算法正在为您火速生成该开发者评估报告</div>
+                </div>
+              ):(
+                <div className='animation-wrapper'>
+                  <LottieAnimation animationData={AnimationHomeInsert1} width='300px' className='ani'></LottieAnimation>
+                  <div className='text'>能力评估报告马上生成！请耐心等候～</div>
+                </div>
+              )
+            }
+          </div>
+        )
+        }
       </div>
     </div>
   );
