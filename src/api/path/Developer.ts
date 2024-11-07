@@ -2,10 +2,10 @@
 
 import Request from '@/api/ApiService';
 import { Result } from '@/types/Result';
-import { DeveloperInfo, Repository, AIDocument } from '@/types/Developer';
+import { DeveloperInfo, Repository, AIDocument,Language } from '@/types/Developer';
 
 // 获取指定开发者信息
-export const getDeveloperById = async (): Promise<Result<DeveloperInfo>> => {
+export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo>> => {
   try {
     const response = await Request.get<DeveloperInfo>(`/developer/select/1`);
     return response.data; // 只返回 response.data 部分
@@ -39,3 +39,12 @@ export const getDeveloperContributedProjects = async (): Promise<Result<Reposito
 
 
 //获取指定开发者的语言
+export const getDeveloperLanguages = async (): Promise<Result<Language[]>> => {
+  try {
+    const response = await Request.get<Language[]>('/developer/select/language/1');
+    return response.data; // 只返回 response.data 部分
+  } catch (error) {
+    console.error('获取语言数据失败:', error);
+    throw error;
+  }
+};

@@ -52,3 +52,7 @@ export interface AIDocument {
 
 
 //语言类型
+export interface Language {
+  name: string;
+  value: number;
+}
