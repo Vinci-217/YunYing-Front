@@ -2,24 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, Spin,Card } from 'antd';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
-
+import { Repository,Language } from '@/types/Developer';
 const { TabPane } = Tabs;
 
-// 定义项目和语言的接口
-interface Project {
-  name: string;
-  commits: number;
-  stars: number;
-  forks: number;
-}
 
-interface Language {
-  name: string;
-  value: number;
-}
 
+//例子语言类型
 const DeveloperCharts: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Repository[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -45,7 +35,7 @@ const DeveloperCharts: React.FC = () => {
 
   useEffect(() => {
     fetchContributionData();
-    fetchLanguageData();
+    // fetchLanguageData();
   }, []);
 
   useEffect(() => {
