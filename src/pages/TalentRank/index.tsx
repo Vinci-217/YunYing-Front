@@ -9,12 +9,13 @@ import { Result } from '@/types/Result';
 import { Developer } from '@/types/TalentRank';
 import { useTheme } from '@/hooks/theme';
 import { useNavigate } from 'react-router-dom';
-
+import { fieldsMap } from '@/assets/maps/fields';
 import { getFieldList, getNationList, getDeveloperList } from '@/api/path/talentrank';
 
 // 导入icon
 import icons from '@/assets/icons/index';
 import logoIcons from '@/assets/logo';
+
 
 // 导入lottie动画
 import LottieAnimation from '@/components/LottieAnimation/LottieAnimation';
@@ -30,6 +31,7 @@ import AnimationBronzeMedal from '@/assets/lottie-animation/animation-bronze-med
 // 导入自定义组件
 import DeveloperCard from '@/components/DeveloperCard/DeveloperCard';
 import { log } from 'console';
+import { nationsMap } from '@/assets/maps/nations';
 
 const { Option } = Select;
 
@@ -60,12 +62,16 @@ const TalentRank: React.FC = () => {
 
   // 获取开发者列表
   const fetchMoreDevelopers = async () => {
-    console.log('获取数据');  
+    console.log('获取数据');
     try {
       const result: Result<Developer[]>  = await getDeveloperList(field.current, nation.current, page.current, pageSize.current);
       console.log('开发者', result);
+      if(page.current === 1){
+        setDevelopers(result.data);
+      }else{
+        setDevelopers(prevDevelopers => [...prevDevelopers,...result.data]);
+      }
       page.current +=1;
-      setDevelopers(prevDevelopers => [...prevDevelopers,...result.data]);
     } catch (err) {
       console.error(err);
     } finally{
@@ -189,9 +195,6 @@ const TalentRank: React.FC = () => {
     console.log(1);
   }, []);
 
-  const fields = ['Frontend', 'Backend', 'Blockchain'];
-  const countries = ['China', 'USA', 'UK', 'Germany'];
-
   // 筛选条件（领域）
   const field = useRef<string>('');
 
@@ -266,9 +269,9 @@ const TalentRank: React.FC = () => {
           className='selector'
           style={{marginRight: '10px'}}
         >
-          {fields.map((field) => (
-            <Option key={field} value={field}>
-              {field}
+          {fieldList.map((field) => (
+            <Option key={field} value={field} title={fieldsMap[field as keyof typeof fieldsMap]}>
+              {fieldsMap[field as keyof typeof fieldsMap]}
             </Option>
           ))}
         </Select>
@@ -278,9 +281,9 @@ const TalentRank: React.FC = () => {
           className='selector'
           style={{marginLeft: '10px'}}
         >
-          {countries.map((country) => (
-            <Option key={country} value={country}>
-              {country}
+          {nationList.map((nation) => (
+            <Option key={nation} value={nation} title={nationsMap[nation as keyof typeof nationsMap]}>
+              {nationsMap[nation as keyof typeof nationsMap]}
             </Option>
           ))}
         </Select>
@@ -300,14 +303,14 @@ const TalentRank: React.FC = () => {
             {developerSkeleton?(
               <div className='avatar-skeleton skeleton-ani'></div>
             ):(
-              <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+              <div className='avatar' onClick={() => navigate(`/developer?id=${developers[1].dev_id}`)}>
+                  <img src={developers[1].avatar}/>
                 </div>
             )}
             {developerSkeleton?(
               <div className='name-skeleton skeleton-ani'></div>
             ):(
-              <div className='name'>{developers[0].dev_login}</div>
+              <div className='name'>{developers[1].dev_login}</div>
             )}
             <LottieAnimation className='silver-medal' animationData={AnimationSilverMedal} width='120px'></LottieAnimation>
           </div>
@@ -317,8 +320,8 @@ const TalentRank: React.FC = () => {
             {developerSkeleton?(
               <div className='avatar-skeleton skeleton-ani'></div>
             ):(
-              <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+              <div className='avatar' onClick={() => navigate(`/developer?id=${developers[0].dev_id}`)}>
+                  <img src={developers[0].avatar}/>
                 </div>
             )}
             {developerSkeleton?(
@@ -335,14 +338,14 @@ const TalentRank: React.FC = () => {
             {developerSkeleton?(
               <div className='avatar-skeleton skeleton-ani'></div>
             ):(
-              <div className='avatar'>
-                  <img src="https://avatars.githubusercontent.com/u/10245193?s=200&v=4"/>
+              <div className='avatar' onClick={() => navigate(`/developer?id=${developers[2].dev_id}`)}>
+                  <img src={developers[2].avatar}/>
                 </div>
             )}
             {developerSkeleton?(
               <div className='name-skeleton skeleton-ani'></div>
             ):(
-              <div className='name'>{developers[0].dev_login}</div>
+              <div className='name'>{developers[2].dev_login}</div>
             )}
             <LottieAnimation className='bronze-medal' animationData={AnimationBronzeMedal} width='120px'></LottieAnimation>
           </div>

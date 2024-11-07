@@ -4,7 +4,7 @@ import { Result } from '@/types/Result';
 
 // 根据开发者login查询开发者
 export const queryDeveloper = async (login: string): Promise<Result<string>> => {
-  const response = await Request.get<string>('/developer/query?login=' + login);
+  const response = await Request.get<string>(`/developer/query/${login}`);
   return response.data; // 只返回 response.data 部分
 };
 

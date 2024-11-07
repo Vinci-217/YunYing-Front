@@ -1,6 +1,11 @@
 import React from 'react';
 import './DeveloperCard.scss';
 import { Rate, Popover } from 'antd';
+import { fieldsMap } from '@/assets/maps/fields';
+import { nationsMap } from '@/assets/maps/nations';
+import { useNavigate } from 'react-router-dom';
+// 国旗icon
+import { FlagIcon, FlagIconCode } from "react-flag-kit";
 
 // 导入icon
 import icons from '@/assets/icons/index';
@@ -14,9 +19,12 @@ interface DeveloperCardProps extends Developer {
 }
 
 const DeveloperCard: React.FC<DeveloperCardProps> = (props) => {
+
+    const navigate = useNavigate();
+
     return (
       <div>
-        <div className={`developer-card ${props.className}`}>
+        <div className={`developer-card ${props.className}`} onClick={() => navigate(`/developer?id=${props.dev_id}`)}>
           <div className='rank'>
             <img src={
               props.rank === 1 ? icons['rank1'] :
@@ -26,9 +34,9 @@ const DeveloperCard: React.FC<DeveloperCardProps> = (props) => {
             }></img>
             <div className='text'>{props.rank}</div>
           </div>
-          <Popover placement="bottomLeft" title='中国' content={`置信度：${props.nation_conf}`}>
+          <Popover placement="bottomLeft" title={nationsMap[props.nation as keyof typeof nationsMap]} content={`置信度：${props.nation_conf}`}>
             <div className='nation'>
-              <img src={nationIcons['China']}></img>
+              <FlagIcon code={props.nation as FlagIconCode}/>
             </div>
           </Popover>
           <div className='avatar'>
@@ -41,16 +49,26 @@ const DeveloperCard: React.FC<DeveloperCardProps> = (props) => {
             <div className='right-divider'></div>
           </div>
           <div className='rate'>
-            <Rate disabled allowHalf defaultValue={props.talent_rank} />
+            <Rate disabled allowHalf defaultValue={props.talent_rank/2} />
           </div>
           <div className='repo'>
-            拥有 <span>{props.talent_rank}</span> 个仓库
+            <span>所属领域：{fieldsMap[props.field as keyof typeof fieldsMap]}</span>
           </div>
         </div>
 
-        <div className='grade'>
+        <div className='grade' onClick={() => navigate(`/developer?id=${props.dev_id}`)}>
           <div className='icon'>
-            <img src={icons[props.grade as keyof typeof icons]}></img>  
+            {props.talent_rank >=9?(
+              <img src={icons['s']}></img> 
+            ):props.talent_rank >=7?(
+              <img src={icons['a']}></img> 
+            ):props.talent_rank >=5?(
+              <img src={icons['b']}></img>
+            ):props.talent_rank >=3?(
+              <img src={icons['c']}></img>
+            ):(
+              <img src={icons['d']}></img>
+            )}
           </div>
           <div className='text'>
             级开发者
