@@ -2,7 +2,7 @@
 
 import Request from '@/api/ApiService';
 import { Result } from '@/types/Result';
-import { DeveloperInfo, Repository, AIDocument,Language } from '@/types/Developer';
+import { DeveloperInfo, Repository, AIDocument,Language,RawLanguageDataResponse} from '@/types/Developer';
 
 // 获取指定开发者信息
 export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo>> => {
@@ -39,10 +39,17 @@ export const getDeveloperContributedProjects = async (): Promise<Result<Reposito
 
 
 //获取指定开发者的语言
-export const getDeveloperLanguages = async (): Promise<Result<Language[]>> => {
+export const getDeveloperLanguages = async (): Promise<Language[]> => {
   try {
-    const response = await Request.get<Language[]>('/developer/select/language/1');
-    return response.data; // 只返回 response.data 部分
+    const response = await Request.get<RawLanguageDataResponse>('/developer/select/language/1');
+    
+    // 将对象形式转换为数组形式
+    const languages: Language[] = Object.entries(response.data.data).map(([name, value]) => ({
+      name,
+      value
+    }));
+    
+    return languages; // 返回数组形式的数据
   } catch (error) {
     console.error('获取语言数据失败:', error);
     throw error;

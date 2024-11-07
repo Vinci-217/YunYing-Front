@@ -51,8 +51,13 @@ export interface AIDocument {
 }
 
 
-//语言类型
+//单个语言类型
 export interface Language {
   name: string;
   value: number;
+}
+
+//
+export interface RawLanguageDataResponse {
+  data: { [key: string]: number }; // 键为语言名称，值为数值
 }
