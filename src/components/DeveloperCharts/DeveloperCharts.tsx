@@ -8,7 +8,11 @@ import { getDeveloperInfo, getDeveloperLanguages, getDeveloperContributedProject
 
 const { TabPane } = Tabs;
 
-const DeveloperCharts: React.FC = () => {
+interface DeveloperChartsProps {
+  id: string;
+}
+
+const DeveloperCharts: React.FC<DeveloperChartsProps> = (props) => {
   const [projects, setProjects] = useState<Repository[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -16,7 +20,7 @@ const DeveloperCharts: React.FC = () => {
   // 请求贡献项目列表
   const fetchProjects = async () => {
     try {
-      const result: Result<Repository[]> = await getDeveloperContributedProjects();
+      const result: Result<Repository[]> = await getDeveloperContributedProjects(props.id);
       console.log('贡献项目列表', result.data);
       setProjects(result.data);
     } catch (err) {
@@ -27,7 +31,7 @@ const DeveloperCharts: React.FC = () => {
   // 获取开发者使用语言数据
   const fetchLanguages = async () => {
     try {
-      const languagesData = await getDeveloperLanguages();
+      const languagesData = await getDeveloperLanguages(props.id);
       setLanguages(languagesData);
     } catch (error) {
       console.error('获取语言数据失败:', error);

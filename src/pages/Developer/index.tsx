@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ConfigProvider, Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer, Tabs } from 'antd';
 import { GithubOutlined, LoadingOutlined,BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
@@ -9,7 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/hooks/theme';
 import { Result } from '@/types/Result';
 import { Spin } from 'antd';
@@ -22,13 +22,23 @@ const { TabPane } = Tabs;
 
 const Developer: React.FC = () => {
   const { isDarkMode } = useTheme();
+
   const navigate = useNavigate();
- 
+const location = useLocation();
+  
+  // 创建一个 URLSearchParams 实例来解析查询字符串
+  const queryParams = new URLSearchParams(location.search);
+  const tmpId: string = queryParams.get('id') as string; // 获取 id 参数
+  console.log('获取url参数id：', tmpId);
+
+  // const id = useRef<string>(tmpId);
+  // console.log('id.current:', id.current);
+  const [id, setId] = useState<string>(tmpId); // 使用 useState 来存储 id
   
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   //定义开发者信息
-  const [developerInfo, setDeveloperInfo] = useState<any>(null); 
+  const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo>();
 
   //定义AI报告信息
   const [aiReport, setAiReport] = useState<string>('');
@@ -47,7 +57,11 @@ const Developer: React.FC = () => {
 // };
 const fetchDeveloperInfo = async () => {
   try {
-    const response = await getDeveloperInfo();  // 调用你的API方法
+    console.log('fetchDeveloperInfo',id);
+    
+    const response = await getDeveloperInfo(id);  // 调用你的API方法
+    console.log('打印开发者信息：', response);
+    
     if (response.code === 200) {
       setDeveloperInfo(response.data);  // 将返回的数据设置到state
     }
@@ -56,13 +70,16 @@ const fetchDeveloperInfo = async () => {
   }
 };
 
-fetchDeveloperInfo();
+// fetchDeveloperInfo();
 
 
 // 请求 AI 报告
 const fetchAiReport = async () => {
   try {
-    const result: Result<AIDocument[]> = await getDeveloperAIReport();
+    console.log('fetchAiReport',id);
+    const result: Result<AIDocument[]> = await getDeveloperAIReport(id);
+    console.log(result.data);
+    
     const aiDocumentString: string = JSON.stringify(result.data);
     // console.log('AI 报告',aiDocumentString);
     setAiReport(aiDocumentString); 
@@ -76,8 +93,10 @@ const fetchAiReport = async () => {
   // 请求贡献项目列表
   const fetchProjects = async () => {
     try {
-      const result: Result<Repository[]> = await  getDeveloperContributedProjects();
-      
+      console.log('fetchProjects',id);
+      const result: Result<Repository[]> = await  getDeveloperContributedProjects(id);
+      if(result.code === 400) return;
+      console.log(result.data);
       setProjects(result.data);
     } catch (err) {
       console.error('获取项目列表失败:', err);
@@ -103,10 +122,12 @@ const fetchAiReport = async () => {
   };
 
   useEffect(() => {
+    // console.log('调用接口获取数据');
     fetchDeveloperInfo();
     fetchAiReport();
     fetchProjects();
-  }, []);
+    
+  }, [id]);
 
   useEffect(() => {
     if (drawerVisible) {
@@ -164,32 +185,32 @@ if (!projects.length) {
         <Col xs={24} md={6}>
           <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
            <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
-              <Avatar size={64} src={developerInfo.avatar} style={{ border: '2px solid black', borderRadius: '50%' }} />
+              <Avatar size={64} src={developerInfo?.avatar} style={{ border: '2px solid black', borderRadius: '50%' }} />
               <Text strong style={{ fontSize: '18px', textAlign: 'center', color: 'var(--text-color)', transition: 'color 0.3s ease' }}>
-                <UserOutlined /> {developerInfo.devName}
+                <UserOutlined /> {developerInfo?.devName}
               </Text>
-              <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo.bio}</Text>
+              <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo?.bio}</Text>
               <Row justify="center" style={{ width: '100%' }}>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo.email}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo?.email}</Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo.home} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo?.home} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
                   <Text className="flex items-center" style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}>
-                    <GlobalOutlined className="mr-1" /> 国籍：{developerInfo.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo.nationConf}%
+                    <GlobalOutlined className="mr-1" /> 国籍：{developerInfo?.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo?.nationConf}%
                   </Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo.followers} | <TeamOutlined /> 关注：{developerInfo.following}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo?.followers} | <TeamOutlined /> 关注：{developerInfo?.following}</Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo.talentRank}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo?.talentRank}</Text>
                 </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo.skills.join(', ')}</Text>
-                </Col>
+                {/* <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo?.skills.join(', ')}</Text>
+                </Col> */}
               </Row>
             </Space>
           </Card>
@@ -233,12 +254,12 @@ if (!projects.length) {
                 }
               }
             }}>
-        <DeveloperCharts/>
+        <DeveloperCharts id={id}/>
         </ConfigProvider>
           <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-          <ActivityGraph username={developerInfo.devName} theme={isDarkMode?'react':'minimal'} />
-          <GitHubActivityGraph username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
-          <GitHubProductiveTime username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
+          <ActivityGraph username={developerInfo?.devName} theme={isDarkMode?'react':'minimal'} />
+          <GitHubActivityGraph username={developerInfo?.devName} theme={isDarkMode?'nord_dark':'default'} />
+          <GitHubProductiveTime username={developerInfo?.devName} theme={isDarkMode?'nord_dark':'default'} />
           </Card>
         
 
