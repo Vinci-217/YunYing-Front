@@ -28,7 +28,7 @@ const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   //定义开发者信息
-  const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo | null>(null);
+  const [developerInfo, setDeveloperInfo] = useState<any>(null); 
 
   //定义AI报告信息
   const [aiReport, setAiReport] = useState<string>('');
@@ -36,15 +36,27 @@ const Developer: React.FC = () => {
   const [projects,setProjects] =useState<Repository[]>([]);
 
 // 获取开发者信息
+// const fetchDeveloperInfo = async () => {
+//   try {
+//     const result = await getDeveloperInfo();
+    
+//     setDeveloperInfo(result.data); 
+//   } catch (error) {
+//     console.error('获取开发者信息失败:', error);
+//   }
+// };
 const fetchDeveloperInfo = async () => {
   try {
-    const result = await getDeveloperInfo();
-    
-    setDeveloperInfo(result.data); 
+    const response = await getDeveloperInfo();  // 调用你的API方法
+    if (response.code === 200) {
+      setDeveloperInfo(response.data);  // 将返回的数据设置到state
+    }
   } catch (error) {
     console.error('获取开发者信息失败:', error);
   }
 };
+
+fetchDeveloperInfo();
 
 
 // 请求 AI 报告
@@ -142,7 +154,9 @@ if (!projects.length) {
             排行
           </Button>
         </div>
-        <ThemeToggle />
+        <div style={{lineHeight: '30px'}}>
+          <ThemeToggle></ThemeToggle>
+        </div>
       </Header>
       <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
 
