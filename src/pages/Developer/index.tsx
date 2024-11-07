@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ConfigProvider, Layout, Card, Typography, Space, Row, Col, Avatar, Button, Drawer, Tabs } from 'antd';
 import { GithubOutlined, LoadingOutlined,BarChartOutlined, SunOutlined, OpenAIOutlined, DoubleRightOutlined, UserOutlined, GlobalOutlined, MailOutlined, CodeOutlined, UsergroupAddOutlined, TeamOutlined, StarOutlined, CheckCircleOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import './index.scss';
@@ -9,7 +9,7 @@ import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
 
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useTheme } from '@/hooks/theme';
 import { Result } from '@/types/Result';
 import { Spin } from 'antd';
@@ -22,8 +22,18 @@ const { TabPane } = Tabs;
 
 const Developer: React.FC = () => {
   const { isDarkMode } = useTheme();
+
   const navigate = useNavigate();
- 
+const location = useLocation();
+  
+  // 创建一个 URLSearchParams 实例来解析查询字符串
+  const queryParams = new URLSearchParams(location.search);
+  const tmpId: string = queryParams.get('id') as string; // 获取 id 参数
+  console.log('获取url参数id：', tmpId);
+
+  // const id = useRef<string>(tmpId);
+  // console.log('id.current:', id.current);
+  const [id, setId] = useState<string>(tmpId); // 使用 useState 来存储 id
   
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
@@ -47,7 +57,11 @@ const Developer: React.FC = () => {
 // };
 const fetchDeveloperInfo = async () => {
   try {
-    const response = await getDeveloperInfo();  // 调用你的API方法
+    console.log('fetchDeveloperInfo',id);
+    
+    const response = await getDeveloperInfo(id);  // 调用你的API方法
+    console.log('打印开发者信息：', response);
+    
     if (response.code === 200) {
       setDeveloperInfo(response.data);  // 将返回的数据设置到state
     }
@@ -56,13 +70,16 @@ const fetchDeveloperInfo = async () => {
   }
 };
 
-fetchDeveloperInfo();
+// fetchDeveloperInfo();
 
 
 // 请求 AI 报告
 const fetchAiReport = async () => {
   try {
-    const result: Result<AIDocument[]> = await getDeveloperAIReport();
+    console.log('fetchAiReport',id);
+    const result: Result<AIDocument[]> = await getDeveloperAIReport(id);
+    console.log(result.data);
+    
     const aiDocumentString: string = JSON.stringify(result.data);
     // console.log('AI 报告',aiDocumentString);
     setAiReport(aiDocumentString); 
@@ -76,8 +93,10 @@ const fetchAiReport = async () => {
   // 请求贡献项目列表
   const fetchProjects = async () => {
     try {
-      const result: Result<Repository[]> = await  getDeveloperContributedProjects();
-      
+      console.log('fetchProjects',id);
+      const result: Result<Repository[]> = await  getDeveloperContributedProjects(id);
+      if(result.code === 400) return;
+      console.log(result.data);
       setProjects(result.data);
     } catch (err) {
       console.error('获取项目列表失败:', err);
@@ -103,10 +122,12 @@ const fetchAiReport = async () => {
   };
 
   useEffect(() => {
+    // console.log('调用接口获取数据');
     fetchDeveloperInfo();
     fetchAiReport();
     fetchProjects();
-  }, []);
+    
+  }, [id]);
 
   useEffect(() => {
     if (drawerVisible) {
@@ -187,9 +208,9 @@ if (!projects.length) {
                 <Col span={24} style={{ textAlign: 'center' }}>
                   <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo?.talentRank}</Text>
                 </Col>
-                <Col span={24} style={{ textAlign: 'center' }}>
+                {/* <Col span={24} style={{ textAlign: 'center' }}>
                   <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo?.skills.join(', ')}</Text>
-                </Col>
+                </Col> */}
               </Row>
             </Space>
           </Card>
@@ -233,7 +254,7 @@ if (!projects.length) {
                 }
               }
             }}>
-        <DeveloperCharts/>
+        <DeveloperCharts id={id}/>
         </ConfigProvider>
           <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
           <ActivityGraph username={developerInfo?.devName} theme={isDarkMode?'react':'minimal'} />
