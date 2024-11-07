@@ -2,24 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Tabs, Spin,Card } from 'antd';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
-
+import { Repository } from '@/types/Developer';
 const { TabPane } = Tabs;
 
-// 定义项目和语言的接口
-interface Project {
-  name: string;
-  commits: number;
-  stars: number;
-  forks: number;
-}
 
+
+//例子语言类型
 interface Language {
   name: string;
   value: number;
 }
 
 const DeveloperCharts: React.FC = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Repository[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -34,18 +29,18 @@ const DeveloperCharts: React.FC = () => {
   };
 
   // 获取开发者使用语言数据
-  const fetchLanguageData = async () => {
-    try {
-      const response = await axios.get('/developer/select/language/1');
-      setLanguages(response.data);
-    } catch (error) {
-      console.error('Error fetching language data', error);
-    }
-  };
+  // const fetchLanguageData = async () => {
+  //   try {
+  //     const response = await axios.get('/developer/select/language/1');
+  //     setLanguages(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching language data', error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchContributionData();
-    fetchLanguageData();
+    // fetchLanguageData();
   }, []);
 
   useEffect(() => {
