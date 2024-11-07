@@ -1,41 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import { Tabs, Spin,Card } from 'antd';
+import { Tabs, Spin, Card } from 'antd';
 import ReactECharts from 'echarts-for-react';
 import axios from 'axios';
-import { Repository,Language } from '@/types/Developer';
+import { Repository, Language, RawLanguageDataResponse } from '@/types/Developer';
+import { Result } from '@/types/Result';
+import { getDeveloperInfo, getDeveloperLanguages, getDeveloperContributedProjects } from '@/api/path/Developer';
+
 const { TabPane } = Tabs;
 
-
-
-//例子语言类型
 const DeveloperCharts: React.FC = () => {
   const [projects, setProjects] = useState<Repository[]>([]);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // 获取贡献项目数据
-  const fetchContributionData = async () => {
+  // 请求贡献项目列表
+  const fetchProjects = async () => {
     try {
-      const response = await axios.get('/developer/select/contribution/1');
-      setProjects(response.data);
-    } catch (error) {
-      console.error('Error fetching contribution data', error);
+      const result: Result<Repository[]> = await getDeveloperContributedProjects();
+      console.log('贡献项目列表', result.data);
+      setProjects(result.data);
+    } catch (err) {
+      console.error('获取项目列表失败:', err);
     }
   };
 
   // 获取开发者使用语言数据
-  const fetchLanguageData = async () => {
+  const fetchLanguages = async () => {
     try {
-      const response = await axios.get('/developer/select/language/1');
-      setLanguages(response.data);
+      const languagesData = await getDeveloperLanguages();
+      setLanguages(languagesData);
     } catch (error) {
-      console.error('Error fetching language data', error);
+      console.error('获取语言数据失败:', error);
     }
   };
 
   useEffect(() => {
-    fetchContributionData();
-    // fetchLanguageData();
+    fetchProjects();
+    fetchLanguages();
   }, []);
 
   useEffect(() => {
@@ -44,15 +45,14 @@ const DeveloperCharts: React.FC = () => {
     }
   }, [projects, languages]);
 
-
   // 雷达图数据
   const radarOption = {
     radar: {
       top: '5%',
-      indicator: projects.map((project) => ({
-        name: project.name,
-        max: Math.max(...projects.map((p) => p.commits)), // 最大提交数量
-      })),
+      indicator: projects.length > 0 ? projects.map((project) => ({
+        name: project.repo_name,
+        max: Math.max(...projects.map((p) => p.watch_count)), // 最大提交数量
+      })) : [],
     },
     series: [
       {
@@ -61,7 +61,7 @@ const DeveloperCharts: React.FC = () => {
         type: 'radar',
         data: [
           {
-            value: projects.map((project) => project.commits),
+            value: projects.length > 0 ? projects.map((project) => project.watch_count) : [],
             name: '提交数量',
           },
         ],
@@ -87,10 +87,10 @@ const DeveloperCharts: React.FC = () => {
         label: { show: false },
         emphasis: { label: { show: true, fontSize: 40, fontWeight: 'bold' } },
         labelLine: { show: false },
-        data: languages.map((language) => ({
+        data: languages.length > 0 ? languages.map((language) => ({
           value: language.value,
           name: language.name,
-        })),
+        })) : [],
       },
     ],
   };
@@ -117,10 +117,10 @@ const DeveloperCharts: React.FC = () => {
         itemStyle: { borderRadius: 5 },
         label: { show: false },
         emphasis: { label: { show: true } },
-        data: projects.map((project) => ({
-          value: project.stars,
-          name: project.name,
-        })),
+        data: projects.length > 0 ? projects.map((project) => ({
+          value: project.star_count,
+          name: project.repo_name,
+        })) : [],
       },
     ],
   };
@@ -143,7 +143,7 @@ const DeveloperCharts: React.FC = () => {
     },
     xAxis: {
       type: 'category',
-      data: projects.map((project) => project.name),
+      data: projects.length > 0 ? projects.map((project) => project.repo_name) : [],
       axisLine: { lineStyle: { color: '#ddd' } },
       axisLabel: { color: '#666' },
     },
@@ -158,15 +158,15 @@ const DeveloperCharts: React.FC = () => {
       {
         name: 'pr数量',
         type: 'bar',
-        data: projects.map((project, index) => ({
-          value: project.forks,
+        data: projects.length > 0 ? projects.map((project, index) => ({
+          value: project.fork_count,
           itemStyle: {
             color: (() => {
               const colorList = ['#FFB74D', '#FF7043', '#42a5f5', '#333', '#4caf50'];
               return colorList[index % colorList.length];
             })(),
           },
-        })),
+        })) : [],
         markPoint: {
           data: [
             { type: 'max', name: 'Max' },
@@ -181,12 +181,15 @@ const DeveloperCharts: React.FC = () => {
     ],
   };
 
+  if (loading) {
+    return <Spin />;
+  }
+
   return (
-    
     <Tabs defaultActiveKey="1" type="card">
       <TabPane tab="Commits统计" key="1">
         <Card title="各项目的Commits" style={{ backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-          <ReactECharts option={radarOption}/>
+          <ReactECharts option={radarOption} />
         </Card>
       </TabPane>
       <TabPane tab="language统计" key="2">
@@ -205,10 +208,10 @@ const DeveloperCharts: React.FC = () => {
         </Card>
       </TabPane>
     </Tabs>
-  
-   );
+  );
 };
 
 export default DeveloperCharts;
+
 
 
