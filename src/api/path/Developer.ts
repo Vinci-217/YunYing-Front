@@ -3,15 +3,13 @@ import Request from '@/api/ApiService';
 import { Result } from '@/types/Result';
 import { DeveloperInfo, Repository, AIDocument,Language,RawLanguageDataResponse} from '@/types/Developer';
 // 获取指定开发者信息
-export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo[]>> => {
+export const getDeveloperInfo = async () => {
   try {
-    const response = await Request.get<DeveloperInfo[]>(
-      'http://127.0.0.1:4523/m1/5316142-4986155-default/developer/select/1'
-    );
-    return response.data; 
+    const response = await Request.get(`/developer/select/1`); // 获取开发者信息
+    return response.data; // 返回开发者数据
   } catch (error) {
     console.error('获取开发者信息失败:', error);
-    throw error;
+    throw error; // 抛出错误，方便在调用时处理
   }
 };
 // 获取指定开发者的 AI 报告
