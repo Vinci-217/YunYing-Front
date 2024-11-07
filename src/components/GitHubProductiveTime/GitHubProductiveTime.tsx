@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface GitHubProductiveTimeProps {
-  username: string;
+  username?: string;
   theme?: string; 
 }
 

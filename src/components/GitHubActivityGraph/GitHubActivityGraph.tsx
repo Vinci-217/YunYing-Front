@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface GitHubActivityGraphProps {
-  username: string;
+  username?: string;
   theme?: string; 
 }
 

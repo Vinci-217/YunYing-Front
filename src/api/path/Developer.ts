@@ -3,9 +3,9 @@ import Request from '@/api/ApiService';
 import { Result } from '@/types/Result';
 import { DeveloperInfo, Repository, AIDocument,Language,RawLanguageDataResponse} from '@/types/Developer';
 // 获取指定开发者信息
-export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo[]>> => {
+export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo>> => {
   try {
-    const response = await Request.get<DeveloperInfo[]>(
+    const response = await Request.get<DeveloperInfo>(
       'http://127.0.0.1:4523/m1/5316142-4986155-default/developer/select/1'
     );
     return response.data; 

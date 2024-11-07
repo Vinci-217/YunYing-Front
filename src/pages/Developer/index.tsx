@@ -28,7 +28,7 @@ const Developer: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
   //定义开发者信息
-  const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo | null>(null);
+  const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo>();
 
   //定义AI报告信息
   const [aiReport, setAiReport] = useState<string>('');
@@ -150,31 +150,31 @@ if (!projects.length) {
         <Col xs={24} md={6}>
           <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
            <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
-              <Avatar size={64} src={developerInfo.avatar} style={{ border: '2px solid black', borderRadius: '50%' }} />
+              <Avatar size={64} src={developerInfo?.avatar} style={{ border: '2px solid black', borderRadius: '50%' }} />
               <Text strong style={{ fontSize: '18px', textAlign: 'center', color: 'var(--text-color)', transition: 'color 0.3s ease' }}>
-                <UserOutlined /> {developerInfo.devName}
+                <UserOutlined /> {developerInfo?.devName}
               </Text>
-              <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo.bio}</Text>
+              <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo?.bio}</Text>
               <Row justify="center" style={{ width: '100%' }}>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo.email}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo?.email}</Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo.home} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo?.home} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
                   <Text className="flex items-center" style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}>
-                    <GlobalOutlined className="mr-1" /> 国籍：{developerInfo.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo.nationConf}%
+                    <GlobalOutlined className="mr-1" /> 国籍：{developerInfo?.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo?.nationConf}%
                   </Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo.followers} | <TeamOutlined /> 关注：{developerInfo.following}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo?.followers} | <TeamOutlined /> 关注：{developerInfo?.following}</Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo.talentRank}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo?.talentRank}</Text>
                 </Col>
                 <Col span={24} style={{ textAlign: 'center' }}>
-                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo.skills.join(', ')}</Text>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo?.skills.join(', ')}</Text>
                 </Col>
               </Row>
             </Space>
@@ -222,9 +222,9 @@ if (!projects.length) {
         <DeveloperCharts/>
         </ConfigProvider>
           <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-          <ActivityGraph username={developerInfo.devName} theme={isDarkMode?'react':'minimal'} />
-          <GitHubActivityGraph username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
-          <GitHubProductiveTime username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
+          <ActivityGraph username={developerInfo?.devName} theme={isDarkMode?'react':'minimal'} />
+          <GitHubActivityGraph username={developerInfo?.devName} theme={isDarkMode?'nord_dark':'default'} />
+          <GitHubProductiveTime username={developerInfo?.devName} theme={isDarkMode?'nord_dark':'default'} />
           </Card>
         
 

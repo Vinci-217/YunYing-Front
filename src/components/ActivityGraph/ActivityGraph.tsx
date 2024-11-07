@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface ActivityGraphProps {
-  username: string;
+  username?: string;
   theme?: string; 
 }
 
