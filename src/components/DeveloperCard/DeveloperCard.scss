@@ -95,6 +95,12 @@
   .rate{
     display: grid;
     justify-items: center;
+    .text{
+      font-weight: bold;
+      font-size: 16px;
+      color: orange;
+      margin-bottom: 5px;
+    }
   }
   .repo{
     font-size: 13px;

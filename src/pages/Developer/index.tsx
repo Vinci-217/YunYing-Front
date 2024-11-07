@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/hooks/theme';
 import axios from 'axios';
 import { Spin } from 'antd';
-
+import { DeveloperInfo, Repository, AIDocument } from '@/types/Developer';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -23,16 +23,18 @@ const { TabPane } = Tabs;
 const Developer: React.FC = () => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
+ 
   
-  const [developerInfo, setDeveloperInfo] = useState<any>(null);
-  const [aiReport, setAiReport] = useState<string>('');
-  const [projects, setProjects] = useState<any[]>([]);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [displayedText, setDisplayedText] = useState('');
-  
-  const fullText = "这里是抽屉的内容，具有打字机特效。";
-  
+  //定义开发者信息
+  const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo | null>(null);
+  //定义AI报告信息
+  const [aiReport, setAiReport] = useState<string>('');
+  //定义贡献项目信息
+  const [projects,setProjects] =useState<Repository[]>([]);
   // 请求开发者信息
+
   const fetchDeveloperInfo = async () => {
     try {
       const response = await axios.get('/developer/select/1');
@@ -46,7 +48,7 @@ const Developer: React.FC = () => {
   const fetchAiReport = async () => {
     try {
       const response = await axios.get('/developer/select/ai-report/1');
-      setAiReport(response.data.report);
+      setAiReport(response.data);
     } catch (error) {
       console.error('获取AI报告失败:', error);
     }
@@ -56,7 +58,7 @@ const Developer: React.FC = () => {
   const fetchProjects = async () => {
     try {
       const response = await axios.get('/developer/select/contribution/1');
-      setProjects(response.data.projects);
+      setProjects(response.data);
     } catch (error) {
       console.error('获取项目列表失败:', error);
     }
@@ -89,7 +91,7 @@ const Developer: React.FC = () => {
 
   useEffect(() => {
     if (drawerVisible) {
-      typeText(fullText);
+      typeText(aiReport);
     }
   }, [drawerVisible]);
 // 加载中的环形加载条组件

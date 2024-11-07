@@ -34,7 +34,7 @@ const DeveloperCard: React.FC<DeveloperCardProps> = (props) => {
             }></img>
             <div className='text'>{props.rank}</div>
           </div>
-          <Popover placement="bottomLeft" title={nationsMap[props.nation as keyof typeof nationsMap]} content={`置信度：${props.nation_conf}`}>
+          <Popover placement="bottomLeft" title={nationsMap[props.nation as keyof typeof nationsMap]} content={`置信度：${props.nation_conf === 0 ?'N/A':props.nation_conf}`}>
             <div className='nation'>
               <FlagIcon code={props.nation as FlagIconCode}/>
             </div>
@@ -49,11 +49,12 @@ const DeveloperCard: React.FC<DeveloperCardProps> = (props) => {
             <div className='right-divider'></div>
           </div>
           <div className='rate'>
+            <div className='text'>能力评估：{Math.floor(props.talent_rank/2*10)/10}</div>
             <Rate disabled allowHalf defaultValue={props.talent_rank/2} />
           </div>
-          <div className='repo'>
+          {/* <div className='repo'>
             <span>所属领域：{fieldsMap[props.field as keyof typeof fieldsMap]}</span>
-          </div>
+          </div> */}
         </div>
 
         <div className='grade' onClick={() => navigate(`/developer?id=${props.dev_id}`)}>
