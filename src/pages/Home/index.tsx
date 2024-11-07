@@ -32,25 +32,22 @@ const Home: React.FC = () => {
 
   // 添加开发者接口等待动画切换
   const [animationIdx, setAnimationIdx] = useState<number>(0);
+
   // 查询开发者
   const queryDeveloperByLogin = async (login: string) => {
-    // try{
-    //   // const res = await queryDeveloper(login);
-    //   // console.log(res);
-    // }catch(e){
-    //   console.log(e);
-    // }
-
-    setTimeout(()=>{
-      try{
-        // const res = await insertDeveloper({login});
-        // console.log(res);
-      }catch(e){
-        console.log(e);
-      }finally{
-        setIsLoading(false);
+    try{
+      const res = await queryDeveloper(login);
+      console.log(res);
+      if(res.code === 200){
+        navigate('/developer?id='+res.data);
+      }else{
+        message.error('无该开发者评估报告，请自行添加！');
       }
-    }, 10000)
+    }catch(e){
+      console.log(e);
+    }finally{
+      setIsLoading(false);
+    }
   }
 
   // 添加开发者
@@ -61,8 +58,15 @@ const Home: React.FC = () => {
         // setAnimationIdx((animationIdx+1)%2); 这样更新不行！
         setAnimationIdx((prevIdx) => (prevIdx + 1) % 2); // 使用函数式更新
       }, 2000);
-      // const res = await insertDeveloper({login});
-      // console.log(res);
+      const res = await insertDeveloper({devLogin: login});
+      console.log(res);
+      clearInterval(interval);
+      if(res.code === 200){
+        navigate('/developer?id='+res.data);
+      }else{
+        message.error('添加开发者失败！');
+        setMode(2);
+      }
     }catch(e){
       console.log(e);
     }
