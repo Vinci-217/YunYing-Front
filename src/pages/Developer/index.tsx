@@ -5,16 +5,16 @@ import './index.scss';
 import ActivityGraph from '@/components/ActivityGraph/ActivityGraph';
 import GitHubActivityGraph from '@/components/GitHubActivityGraph/GitHubActivityGraph';
 import DeveloperCharts from '@/components/DeveloperCharts/DeveloperCharts';
-import * as echarts from 'echarts';
 import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 import GitHubProductiveTime from '@/components/GitHubProductiveTime/GitHubProductiveTime';
-import ReactECharts from 'echarts-for-react';
+
 import RepositoryCard from '@/components/RepositoryCard/RepositoryCard';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '@/hooks/theme';
-import axios from 'axios';
+import { Result } from '@/types/Result';
 import { Spin } from 'antd';
 import { DeveloperInfo, Repository, AIDocument } from '@/types/Developer';
+import { getDeveloperInfo, getDeveloperAIReport, getDeveloperContributedProjects } from '@/api/path/Developer';
 
 const { Text, Title } = Typography;
 const { Header } = Layout;
@@ -29,41 +29,48 @@ const Developer: React.FC = () => {
   const [displayedText, setDisplayedText] = useState('');
   //定义开发者信息
   const [developerInfo, setDeveloperInfo] = useState<DeveloperInfo | null>(null);
+
   //定义AI报告信息
   const [aiReport, setAiReport] = useState<string>('');
   //定义贡献项目信息
   const [projects,setProjects] =useState<Repository[]>([]);
-  // 请求开发者信息
 
-  const fetchDeveloperInfo = async () => {
-    try {
-      const response = await axios.get('/developer/select/1');
-      setDeveloperInfo(response.data);
-    } catch (error) {
-      console.error('获取开发者信息失败:', error);
-    }
-  };
+// 获取开发者信息
+const fetchDeveloperInfo = async () => {
+  try {
+    const result = await getDeveloperInfo();
+    
+    setDeveloperInfo(result.data); 
+  } catch (error) {
+    console.error('获取开发者信息失败:', error);
+  }
+};
 
-  // 请求 AI 报告
-  const fetchAiReport = async () => {
-    try {
-      const response = await axios.get('/developer/select/ai-report/1');
-      setAiReport(response.data);
-    } catch (error) {
-      console.error('获取AI报告失败:', error);
-    }
-  };
+
+// 请求 AI 报告
+const fetchAiReport = async () => {
+  try {
+    const result: Result<AIDocument[]> = await getDeveloperAIReport();
+    const aiDocumentString: string = JSON.stringify(result.data);
+    // console.log('AI 报告',aiDocumentString);
+    setAiReport(aiDocumentString); 
+  } catch (err) {
+    console.error('获取 AI 报告失败:', err);
+  }
+};
+
+
 
   // 请求贡献项目列表
   const fetchProjects = async () => {
     try {
-      const response = await axios.get('/developer/select/contribution/1');
-      setProjects(response.data);
-    } catch (error) {
-      console.error('获取项目列表失败:', error);
+      const result: Result<Repository[]> = await  getDeveloperContributedProjects();
+      
+      setProjects(result.data);
+    } catch (err) {
+      console.error('获取项目列表失败:', err);
     }
   };
-
 
 
   // 显示抽屉并启动打字机效果
@@ -104,9 +111,11 @@ const Developer: React.FC = () => {
 };
 
 
-if (!developerInfo || !projects.length) {
+if (!projects.length) {
     return <Loading />;
   }
+
+
 
 
   return (
@@ -138,37 +147,40 @@ if (!developerInfo || !projects.length) {
       <Layout style={{ backgroundColor: 'var(--bg-color)', transition: 'background-color 0.3s ease', minHeight: '100vh', padding: '20px' }}>
 
         <Row gutter={[16, 16]}>
-          <Col xs={24} md={6}>
-            <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
-              <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
-                <Avatar size={64} src={developerInfo.avatarUrl} style={{ border: '2px solid black', borderRadius: '50%' }} />
-                <Text strong style={{ fontSize: '18px', textAlign: 'center', color: 'var(--text-color)', transition: 'color 0.3s ease' }}><UserOutlined /> {developerInfo.name}</Text>
-                <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo.bio}</Text>
-                <Row justify="center" style={{ width: '100%' }}>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo.email}</Text>
-                  </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo.github} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
-                  </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text className="flex items-center" style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}>
-                      <GlobalOutlined className="mr-1" /> 国籍：{developerInfo.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo.confidence}%
-                    </Text>
-                  </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo.followers} | <TeamOutlined /> 关注：{developerInfo.following}</Text>
-                  </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo.talentRank}</Text>
-                  </Col>
-                  <Col span={24} style={{ textAlign: 'center' }}>
-                    <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo.skills.join(', ')}</Text>
-                  </Col>
-                </Row>
-              </Space>
-            </Card>
-          </Col>
+        <Col xs={24} md={6}>
+          <Card bordered={false} style={{ height: '100%', backgroundColor: 'var(--border-color)', transition: 'background-color 0.3s ease' }}>
+           <Space direction="vertical" size="middle" style={{ alignItems: 'center' }}>
+              <Avatar size={64} src={developerInfo.avatar} style={{ border: '2px solid black', borderRadius: '50%' }} />
+              <Text strong style={{ fontSize: '18px', textAlign: 'center', color: 'var(--text-color)', transition: 'color 0.3s ease' }}>
+                <UserOutlined /> {developerInfo.devName}
+              </Text>
+              <Text type="secondary" style={{ textAlign: 'center', color: 'var(--secondary-text-color)', transition: 'color 0.3s ease' }}>{developerInfo.bio}</Text>
+              <Row justify="center" style={{ width: '100%' }}>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><MailOutlined /> {developerInfo.email}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><GithubOutlined /> <a href={developerInfo.home} target="_blank" rel="noopener noreferrer">GitHub</a></Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text className="flex items-center" style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}>
+                    <GlobalOutlined className="mr-1" /> 国籍：{developerInfo.nation} | <CheckCircleOutlined className="ml-1" /> 置信度：{developerInfo.nationConf}%
+                  </Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><UsergroupAddOutlined /> 粉丝：{developerInfo.followers} | <TeamOutlined /> 关注：{developerInfo.following}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><StarOutlined /> Talentrank：{developerInfo.talentRank}</Text>
+                </Col>
+                <Col span={24} style={{ textAlign: 'center' }}>
+                  <Text style={{color: 'var(--text-color)', transition: 'color 0.3s ease'}}><AppstoreAddOutlined /> 领域：{developerInfo.skills.join(', ')}</Text>
+                </Col>
+              </Row>
+            </Space>
+          </Card>
+        </Col> 
+
 
           <Col xs={24} md={18} style={{ display: 'flex', flexDirection: 'column' }}>
             <Row gutter={[16, 16]} style={{ flex: 1 }}>
@@ -179,15 +191,15 @@ if (!developerInfo || !projects.length) {
                   </Title>
                   <div style={{ maxHeight: '300px', overflowY: 'hidden', padding: '8px' }}>
                     <Row gutter={[16, 16]}>
-                      {projects.slice(0, 4).map((project, index) => (
+                      {projects && projects.length > 0 && projects.slice(0, 4).map((project, index) => (
                         <Col span={12} key={index}>
                           <RepositoryCard
-                            name={project.name}
+                            name={project.repo_name}
                             description={project.description}
-                            stars={project.stars}
-                            forks={project.forks}
-                            
-                            onClick={() => window.open(project.url, '_blank')}
+                            stars={project.star_count}
+                            forks={project.fork_count}
+                            prs={project.pr_count}
+                            onClick={() => window.open(project.repo_home, '_blank')}
                           />
                         </Col>
                       ))}
@@ -209,10 +221,10 @@ if (!developerInfo || !projects.length) {
             }}>
         <DeveloperCharts/>
         </ConfigProvider>
-        <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
-          <ActivityGraph username={developerInfo.name} theme={isDarkMode?'react':'minimal'} />
-          <GitHubActivityGraph username={developerInfo.name} theme={isDarkMode?'nord_dark':'default'} />
-          <GitHubProductiveTime username={developerInfo.name} theme={isDarkMode?'nord_dark':'default'} />
+          <Card style={{ marginTop: '20px', backgroundColor: 'var(--card-color)', transition: 'background-color 0.3s ease' }}>
+          <ActivityGraph username={developerInfo.devName} theme={isDarkMode?'react':'minimal'} />
+          <GitHubActivityGraph username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
+          <GitHubProductiveTime username={developerInfo.devName} theme={isDarkMode?'nord_dark':'default'} />
           </Card>
         
 
@@ -220,7 +232,7 @@ if (!developerInfo || !projects.length) {
       {/* 抽屉显示AI报告 */}
       <Drawer
         title="AI 报告"
-        placement="right"
+        placement="left"
         onClose={onClose}
         visible={drawerVisible}
         width={500}
@@ -229,13 +241,12 @@ if (!developerInfo || !projects.length) {
           <Text>{aiReport}</Text>
         </div>
       </Drawer>
-    </Layout>
+       </Layout>
     </Layout>
   );
 };
 
 export default Developer;
-
 
 
 

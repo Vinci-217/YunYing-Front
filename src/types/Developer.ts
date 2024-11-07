@@ -44,11 +44,10 @@ export interface Repository {
 
 // AI 报告类型
 export interface AIDocument {
-  code: number;
-  data: string;
-  message: string;
-  [property: string]: any;
+
+  data: string; 
 }
+
 
 
 //单个语言类型
