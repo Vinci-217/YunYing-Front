@@ -11,7 +11,7 @@ export const getDeveloperInfo = async (): Promise<Result<DeveloperInfo>> => {
     return response.data; 
   } catch (error) {
     console.error('获取开发者信息失败:', error);
-    throw error;
+    throw error; // 抛出错误，方便在调用时处理
   }
 };
 // 获取指定开发者的 AI 报告
